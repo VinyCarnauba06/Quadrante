@@ -46,7 +46,6 @@
   <aside class="equipe" aria-labelledby="titulo-equipe">
     <div class="painel-cabecalho">
       <h2 id="titulo-equipe">Equipe</h2>
-      <span class="tag-ed" title="Cadastro em Vetor dinâmico: acesso por índice em O(1)">Vetor · O(1)</span>
     </div>
     <p class="resumo" id="resumo-equipe" aria-live="polite">Carregando equipe…</p>
     <ul class="lista-fiscais rolagem-fina" id="lista-fiscais" aria-label="Fiscais"></ul>
@@ -95,7 +94,6 @@
       <section class="painel-aba" role="tabpanel" id="painel-ausencias" aria-labelledby="tab-ausencias" tabindex="0" hidden>
         <div class="painel-cabecalho">
           <h2>Registrar ausência</h2>
-          <span class="tag-ed" title="Enfileirar e desenfileirar em O(1)">Fila · FIFO · O(1)</span>
         </div>
         <form id="form-ausencia" class="form" novalidate>
           <div class="campo">
@@ -141,7 +139,6 @@
       <section class="painel-aba" role="tabpanel" id="painel-historico" aria-labelledby="tab-historico" tabindex="0" hidden>
         <div class="painel-cabecalho">
           <h2>Histórico de realocações</h2>
-          <span class="tag-ed" title="Empilhar e desempilhar em O(1)">Pilha · LIFO · O(1)</span>
         </div>
         <div id="historico"></div>
         <div class="acoes-grupo">
@@ -159,9 +156,7 @@
       <section class="painel-aba" role="tabpanel" id="painel-kmeans" aria-labelledby="tab-kmeans" tabindex="0" hidden>
         <div class="painel-cabecalho">
           <h2>Redistribuição sugerida</h2>
-          <span class="tag-ed">k-means</span>
         </div>
-        <p class="explicacao">Agrupa os condomínios por proximidade geográfica e sugere quem deveria atender cada região, equilibrando a carga. Nada muda até você aplicar.</p>
         <button type="button" class="btn btn-primario btn-bloco" id="btn-sugerir">
           <span class="icone" data-icone="grupo" aria-hidden="true"></span>
           Calcular sugestão
@@ -172,9 +167,7 @@
       <section class="painel-aba" role="tabpanel" id="painel-cadastro" aria-labelledby="tab-cadastro" tabindex="0" data-geocodificacao="{{ 'ativa' if geoapify_chave else 'inativa' }}" hidden>
         <div class="painel-cabecalho">
           <h2>Novo condomínio</h2>
-          <span class="tag-ed" title="O condomínio entra no fim da carteira do fiscal mais próximo">Lista encadeada</span>
         </div>
-        <p class="explicacao">O endereço é localizado pela API de geocodificação da Geoapify. O condomínio entra na carteira do fiscal de campo com o centro de carteira mais próximo.</p>
         <p class="aviso-painel" id="cadastro-aviso" role="status" hidden>Geocodificação desativada. Preencha GEOAPIFY_API_KEY no arquivo .env e reinicie o servidor.</p>
         <form id="form-cadastro" class="form" novalidate>
           <div class="campo">
