@@ -10,15 +10,25 @@ from datetime import datetime
 
 from flask import Flask, jsonify, request, render_template
 
+from backend.config import carregar_configuracao
 from backend.domain.clustering import AtribuicaoSugerida
+from backend.infra.geoapify import GeoapifyGeocodificador
 from backend.repository.store import Store
 from backend.seed.loader import carregar
+from backend.service.cadastro_service import CadastroService, DadosInvalidosError, SemFiscalParaCadastroError
 from backend.service.clustering_service import ClusteringService
+from backend.service.geocoding_service import (
+    GeocodificacaoFalhouError,
+    GeocodificacaoIndisponivelError,
+    GeocodificadorAusente,
+)
 from backend.service.reallocation_service import ReallocationService, SolicitacaoAusencia
 from backend.service.routing_service import RoutingService
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CAMINHO_SEED = os.path.join(BASE_DIR, "backend", "seed", "dados.json")
+config = carregar_configuracao(BASE_DIR)
+geocodificador = GeoapifyGeocodificador(config.geoapify_chave) if config.geoapify_chave else GeocodificadorAusente()
 
 app = Flask(
     __name__,
@@ -36,7 +46,8 @@ def _inicializar_estado():
     routing = RoutingService(store)
     clustering = ClusteringService(store)
     realloc = ReallocationService(store, routing)
-    return {"store": store, "routing": routing, "clustering": clustering, "realloc": realloc}
+    cadastro = CadastroService(store, geocodificador)
+    return {"store": store, "routing": routing, "clustering": clustering, "realloc": realloc, "cadastro": cadastro}
 
 
 _estado.update(_inicializar_estado())
@@ -54,7 +65,65 @@ def _fiscal_para_json(f, carga_por_fiscal):
 
 @app.get("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", geoapify_chave=config.geoapify_chave)
+
+
+@app.get("/api/geocodificar")
+def geocodificar():
+    cadastro = _estado["cadastro"]
+    try:
+        candidatos = cadastro.localizar(request.args.get("q", ""))
+    except DadosInvalidosError as erro:
+        return jsonify({"erro": str(erro)}), 400
+    except GeocodificacaoIndisponivelError as erro:
+        return jsonify({"erro": str(erro)}), 503
+    except GeocodificacaoFalhouError as erro:
+        return jsonify({"erro": str(erro)}), 502
+
+    return jsonify({
+        "candidatos": [
+            {
+                "endereco": c.resultado.endereco,
+                "bairro": c.resultado.bairro,
+                "latitude": c.resultado.latitude,
+                "longitude": c.resultado.longitude,
+                "confianca": c.resultado.confianca,
+                "fiscal_sugerido_id": c.destino.fiscal.id if c.destino else None,
+                "fiscal_sugerido_nome": c.destino.fiscal.nome if c.destino else None,
+                "distancia_m": round(c.destino.distancia_metros, 1) if c.destino else None,
+            }
+            for c in candidatos
+        ]
+    })
+
+
+@app.post("/api/condominios")
+def cadastrar_condominio():
+    payload = request.get_json(silent=True) or {}
+    cadastro = _estado["cadastro"]
+    try:
+        with _lock:
+            condominio, destino = cadastro.cadastrar(
+                payload.get("nome"),
+                payload.get("endereco"),
+                payload.get("latitude"),
+                payload.get("longitude"),
+            )
+    except DadosInvalidosError as erro:
+        return jsonify({"erro": str(erro)}), 400
+    except SemFiscalParaCadastroError as erro:
+        return jsonify({"erro": str(erro)}), 409
+
+    return jsonify({
+        "id": condominio.id,
+        "nome": condominio.nome,
+        "endereco": condominio.endereco_formatado,
+        "latitude": condominio.latitude,
+        "longitude": condominio.longitude,
+        "fiscal_id": destino.fiscal.id,
+        "fiscal_nome": destino.fiscal.nome,
+        "distancia_m": round(destino.distancia_metros, 1),
+    }), 201
 
 
 @app.get("/api/fiscais")
@@ -70,6 +139,12 @@ def gerar_rota(fiscal_id):
     with _lock:
         routing = _estado["routing"]
         rota = routing.gerar_rota_do_dia(fiscal_id, datetime.utcnow())
+    store = _estado["store"]
+
+    def endereco_de(condominio_id):
+        condominio = store.buscar_condominio(condominio_id)
+        return condominio.endereco_formatado if condominio else ""
+
     return jsonify({
         "fiscal_id": fiscal_id,
         "distancia_total_km": round(rota.distancia_total_metros / 1000, 2),
@@ -78,6 +153,7 @@ def gerar_rota(fiscal_id):
                 "ordem": p.ordem,
                 "condominio_id": p.condominio_id,
                 "condominio_nome": p.condominio_nome,
+                "endereco": endereco_de(p.condominio_id),
                 "latitude": p.latitude,
                 "longitude": p.longitude,
             }
@@ -97,7 +173,13 @@ def mapa_geral():
             "nome": f.nome,
             "papel": f.papel,
             "condominios": [
-                {"id": c.id, "nome": c.nome, "latitude": c.latitude, "longitude": c.longitude}
+                {
+                    "id": c.id,
+                    "nome": c.nome,
+                    "endereco": c.endereco_formatado,
+                    "latitude": c.latitude,
+                    "longitude": c.longitude,
+                }
                 for c in condominios
             ],
         })
@@ -296,4 +378,4 @@ def resetar():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host=config.host, port=config.porta, debug=config.debug)

@@ -2,86 +2,254 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quadrante — Roteirização e Divisão Territorial</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#0e5a5f">
+<title>Quadrante — roteirização e divisão territorial</title>
+<link rel="preload" href="{{ url_for('static', filename='fonts/ibm-plex-sans-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ url_for('static', filename='fonts/ibm-plex-sans-latin-600-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet-markercluster/MarkerCluster.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/componentes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
 </head>
 <body>
+<a class="pular" href="#mapa">Pular para o mapa</a>
 
-<header>
-  <div>
-    <h1>Quadrante</h1>
-    <p>Roteirização e divisão territorial por proximidade geográfica — Estruturas de Dados</p>
-  </div>
-  <button id="btn-reset" class="perigo" title="Recarrega o estado real da Prolar AGE: 9 fiscais, 127 condomínios, nenhuma ausência ou realocação pendente">
-    Reiniciar demonstração
-  </button>
-</header>
-
-<main>
-  <div>
-    <div class="painel">
-      <h2>Fiscais</h2>
-      <div id="lista-fiscais" class="lista-fiscais"><p class="vazio">carregando…</p></div>
-      <p class="rodape-conceito">Cadastro em <strong>Vetor</strong> dinâmico; carteira de cada fiscal em uma <strong>Lista Encadeada</strong> própria.</p>
-    </div>
-
-    <div class="painel">
-      <h2>Registrar ausência</h2>
-      <form id="form-ausencia" class="form-ausencia">
-        <label>Fiscal
-          <select id="ausencia-fiscal" required></select>
-        </label>
-        <label>Motivo
-          <select id="ausencia-motivo">
-            <option value="ferias">Férias</option>
-            <option value="falta">Falta</option>
-            <option value="licenca">Licença</option>
-            <option value="outro">Outro</option>
-          </select>
-        </label>
-        <label>Início <input type="date" id="ausencia-inicio" required></label>
-        <label>Fim <input type="date" id="ausencia-fim" required></label>
-        <button type="submit" class="primario">Enfileirar solicitação</button>
-      </form>
-      <div id="fila-ausencias" class="fila-visual" style="margin-top:12px;"></div>
-      <div class="acoes">
-        <button id="btn-processar-fila">Processar próxima da fila</button>
-        <button id="btn-reverter-expiradas">Reverter realocações expiradas</button>
+<div class="app">
+  <header class="topo">
+    <div class="marca">
+      <svg class="marca-logo" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="5" fill="#fbfaf6"/>
+        <path d="M16 5v22M5 16h22" stroke="#0e5a5f" stroke-width="2"/>
+        <rect x="16" y="5" width="11" height="11" fill="#c2410c"/>
+      </svg>
+      <div>
+        <h1>Quadrante</h1>
+        <p>Roteirização e divisão territorial por proximidade</p>
       </div>
-      <div id="msg-ausencia"></div>
-      <p class="rodape-conceito">Fila (FIFO): quem avisou a ausência primeiro tem a carteira redistribuída primeiro — não é justo processar a segunda solicitação antes da primeira só porque chegou "mais fácil".</p>
     </div>
+    <div class="topo-acoes">
+      <p class="chip-status" id="status-api" data-estado="aguardando" role="status">
+        <span class="ponto" aria-hidden="true"></span>
+        <span id="status-api-texto">conectando…</span>
+      </p>
+      <button type="button" class="btn" id="btn-reset" aria-label="Reiniciar demonstração" title="Recarrega o estado inicial: fiscais, condomínios, sem ausências nem realocações">
+        <span class="icone" data-icone="reiniciar" aria-hidden="true"></span>
+        <span class="rotulo-btn">Reiniciar demonstração</span>
+      </button>
+    </div>
+  </header>
 
-    <div class="painel">
-      <h2>Histórico de realocações (desfazer)</h2>
-      <div id="historico" class="pilha-visual"><p class="vazio">nenhuma realocação ainda</p></div>
-      <div class="acoes">
-        <button id="btn-desfazer" class="perigo">Desfazer a realocação do topo</button>
+  <aside class="equipe" aria-labelledby="titulo-equipe">
+    <div class="painel-cabecalho">
+      <h2 id="titulo-equipe">Equipe</h2>
+      <span class="tag-ed" title="Cadastro em Vetor dinâmico: acesso por índice em O(1)">Vetor · O(1)</span>
+    </div>
+    <p class="resumo" id="resumo-equipe" aria-live="polite">Carregando equipe…</p>
+    <ul class="lista-fiscais rolagem-fina" id="lista-fiscais" aria-label="Fiscais"></ul>
+    <details class="conceito">
+      <summary>Por que Vetor e Lista encadeada?</summary>
+      <p>O cadastro de fiscais fica em um Vetor dinâmico: acesso por índice em O(1) e crescimento por dobra de capacidade. A carteira de cada fiscal é uma Lista encadeada: como condomínios entram e saem o tempo todo por realocação, religar dois ponteiros é O(1) depois de achar o nó, contra O(n) para deslocar elementos num vetor.</p>
+    </details>
+  </aside>
+
+  <main class="palco" id="palco">
+    <div id="mapa" role="region" aria-label="Mapa dos condomínios por fiscal"{% if geoapify_chave %} data-geoapify-chave="{{ geoapify_chave }}"{% endif %}></div>
+    <div class="mapa-cartao">
+      <div>
+        <h2 id="titulo-mapa">Mapa geral</h2>
+        <p id="subtitulo-mapa" aria-live="polite">Carteira de cada fiscal</p>
       </div>
-      <p class="rodape-conceito">Pilha (LIFO): desfazer sempre reverte a decisão mais recente do coordenador — se ele mudou a carteira de dois fiscais hoje, desfazer a primeira mudança sem desfazer a segunda deixaria o sistema num estado que o coordenador nunca pediu.</p>
+      <button type="button" class="btn btn-pequeno" id="btn-mapa-geral" title="Voltar ao mapa geral (Esc)" hidden>
+        <span class="icone" data-icone="mapa" aria-hidden="true"></span>
+        Mapa geral
+      </button>
     </div>
-  </div>
+    <div class="mapa-carregando" id="mapa-carregando" role="status" hidden>
+      <span class="spinner" aria-hidden="true"></span>
+      <span>Calculando rota (TSP)…</span>
+    </div>
+    <p class="mapa-aviso" id="mapa-aviso" role="status" hidden>Mapa base sem conexão. Pontos e rotas continuam visíveis.</p>
+  </main>
 
-  <div>
-    <div class="painel">
-      <h2 id="titulo-mapa">Mapa geral — carteira por fiscal</h2>
-      <div class="mapa-area">
-        <div id="mapa"></div>
-      </div>
-      <div id="info-rota"></div>
+  <aside class="lateral" aria-label="Operações">
+    <div class="tabs" role="tablist" aria-label="Painéis de operação">
+      <button type="button" class="tab" role="tab" id="tab-rota" aria-controls="painel-rota" aria-selected="true">Rota</button>
+      <button type="button" class="tab" role="tab" id="tab-ausencias" aria-controls="painel-ausencias" aria-selected="false" tabindex="-1">
+        Ausências <span class="contador" id="contador-fila" hidden></span>
+      </button>
+      <button type="button" class="tab" role="tab" id="tab-historico" aria-controls="painel-historico" aria-selected="false" tabindex="-1">
+        Histórico <span class="contador" id="contador-historico" hidden></span>
+      </button>
+      <button type="button" class="tab" role="tab" id="tab-kmeans" aria-controls="painel-kmeans" aria-selected="false" tabindex="-1">K-means</button>
+      <button type="button" class="tab" role="tab" id="tab-cadastro" aria-controls="painel-cadastro" aria-selected="false" tabindex="-1" aria-label="Novo condomínio">
+        <span class="icone" data-icone="mais" aria-hidden="true"></span>
+        Novo
+      </button>
     </div>
 
-    <div class="painel">
-      <h2>Redistribuição geográfica sugerida (k-means)</h2>
-      <button id="btn-sugerir">Rodar k-means geográfico + rebalanceamento</button>
-      <div id="resultado-clustering" style="margin-top:12px;"></div>
-    </div>
-  </div>
-</main>
+    <div class="lateral-conteudo rolagem-fina">
+      <section class="painel-aba" role="tabpanel" id="painel-rota" aria-labelledby="tab-rota" tabindex="0">
+        <div id="rota-conteudo"></div>
+        <details class="conceito">
+          <summary>Como a rota é calculada?</summary>
+          <p>O vizinho mais próximo monta uma rota inicial e o 2-opt troca trechos que se cruzam até não haver mais ganho. As distâncias usam a fórmula de Haversine sobre as coordenadas reais dos condomínios.</p>
+        </details>
+      </section>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+      <section class="painel-aba" role="tabpanel" id="painel-ausencias" aria-labelledby="tab-ausencias" tabindex="0" hidden>
+        <div class="painel-cabecalho">
+          <h2>Registrar ausência</h2>
+          <span class="tag-ed" title="Enfileirar e desenfileirar em O(1)">Fila · FIFO · O(1)</span>
+        </div>
+        <form id="form-ausencia" class="form" novalidate>
+          <div class="campo">
+            <label for="ausencia-fiscal">Fiscal</label>
+            <select id="ausencia-fiscal" required></select>
+          </div>
+          <div class="campo">
+            <label for="ausencia-motivo">Motivo</label>
+            <select id="ausencia-motivo">
+              <option value="ferias">Férias</option>
+              <option value="falta">Falta</option>
+              <option value="licenca">Licença</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="campos-linha">
+            <div class="campo">
+              <label for="ausencia-inicio">Início</label>
+              <input type="date" id="ausencia-inicio" required>
+            </div>
+            <div class="campo">
+              <label for="ausencia-fim">Fim</label>
+              <input type="date" id="ausencia-fim" required aria-describedby="erro-periodo">
+            </div>
+          </div>
+          <p class="campo-erro" id="erro-periodo" role="alert" hidden></p>
+          <button type="submit" class="btn btn-primario btn-bloco" id="btn-enfileirar">
+            <span class="icone" data-icone="mais" aria-hidden="true"></span>
+            Enfileirar solicitação
+          </button>
+        </form>
+
+        <h3 class="subtitulo">Fila de atendimento</h3>
+        <div id="fila-ausencias"></div>
+        <div class="acoes-empilhadas">
+          <button type="button" class="btn btn-bloco" id="btn-processar-fila" aria-disabled="true">
+            <span class="icone" data-icone="proximo" aria-hidden="true"></span>
+            Processar próxima da fila
+          </button>
+        </div>
+
+        <details class="conceito">
+          <summary>Por que uma Fila?</summary>
+          <p>Quem avisou a ausência primeiro tem a carteira redistribuída primeiro. A Fila (FIFO), feita com ponteiros de início e de fim, enfileira e desenfileira em O(1) e impede que uma solicitação mais recente passe na frente só porque é mais fácil de resolver.</p>
+        </details>
+      </section>
+
+      <section class="painel-aba" role="tabpanel" id="painel-historico" aria-labelledby="tab-historico" tabindex="0" hidden>
+        <div class="painel-cabecalho">
+          <h2>Histórico de realocações</h2>
+          <span class="tag-ed" title="Empilhar e desempilhar em O(1)">Pilha · LIFO · O(1)</span>
+        </div>
+        <div id="historico"></div>
+        <div class="acoes-grupo">
+          <button type="button" class="btn" id="btn-desfazer" aria-disabled="true">
+            <span class="icone" data-icone="desfazer" aria-hidden="true"></span>
+            Desfazer topo
+          </button>
+          <button type="button" class="btn" id="btn-reverter-expiradas" title="Devolve ao titular as carteiras cujo período de ausência já terminou">
+            <span class="icone" data-icone="relogio" aria-hidden="true"></span>
+            Reverter expiradas
+          </button>
+        </div>
+
+        <details class="conceito">
+          <summary>Por que uma Pilha?</summary>
+          <p>Desfazer sempre reverte a decisão mais recente. Se o coordenador mudou a carteira de dois fiscais hoje, desfazer a primeira sem desfazer a segunda deixaria o sistema num estado que ele nunca pediu. Isso é semântica de Pilha (LIFO), com topo acessível em O(1).</p>
+        </details>
+      </section>
+
+      <section class="painel-aba" role="tabpanel" id="painel-kmeans" aria-labelledby="tab-kmeans" tabindex="0" hidden>
+        <div class="painel-cabecalho">
+          <h2>Redistribuição sugerida</h2>
+          <span class="tag-ed">k-means</span>
+        </div>
+        <p class="explicacao">Agrupa os condomínios por proximidade geográfica e sugere quem deveria atender cada região, equilibrando a carga. Nada muda até você aplicar.</p>
+        <button type="button" class="btn btn-primario btn-bloco" id="btn-sugerir">
+          <span class="icone" data-icone="grupo" aria-hidden="true"></span>
+          Calcular sugestão
+        </button>
+        <div id="resultado-clustering" aria-live="polite"></div>
+
+        <details class="conceito">
+          <summary>Como a sugestão é calculada?</summary>
+          <p>O k-means agrupa os condomínios em torno de um centro por fiscal de campo, usando distância geográfica. Depois, um passo de rebalanceamento move condomínios das zonas mais pesadas para as vizinhas mais leves, para que nenhum fiscal fique sobrecarregado.</p>
+        </details>
+      </section>
+
+      <section class="painel-aba" role="tabpanel" id="painel-cadastro" aria-labelledby="tab-cadastro" tabindex="0" data-geocodificacao="{{ 'ativa' if geoapify_chave else 'inativa' }}" hidden>
+        <div class="painel-cabecalho">
+          <h2>Novo condomínio</h2>
+          <span class="tag-ed" title="O condomínio entra no fim da carteira do fiscal mais próximo">Lista encadeada</span>
+        </div>
+        <p class="explicacao">O endereço é localizado pela API de geocodificação da Geoapify. O condomínio entra na carteira do fiscal de campo com o centro de carteira mais próximo.</p>
+        <p class="aviso-painel" id="cadastro-aviso" role="status" hidden>Geocodificação desativada. Preencha GEOAPIFY_API_KEY no arquivo .env e reinicie o servidor.</p>
+        <form id="form-cadastro" class="form" novalidate>
+          <div class="campo">
+            <label for="cadastro-nome">Nome do condomínio</label>
+            <input type="text" id="cadastro-nome" maxlength="120" autocomplete="off" required aria-describedby="erro-cadastro-nome">
+            <p class="campo-erro" id="erro-cadastro-nome" role="alert" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="cadastro-endereco">Endereço</label>
+            <input type="search" id="cadastro-endereco" maxlength="300" autocomplete="off" placeholder="Rua, número, bairro" required aria-describedby="erro-cadastro-endereco">
+            <p class="campo-erro" id="erro-cadastro-endereco" role="alert" hidden></p>
+          </div>
+          <button type="submit" class="btn btn-bloco" id="btn-buscar-endereco">
+            <span class="icone" data-icone="mapa" aria-hidden="true"></span>
+            Buscar endereço
+          </button>
+        </form>
+
+        <div id="cadastro-resultado" aria-live="polite"></div>
+        <div class="acoes-empilhadas">
+          <button type="button" class="btn btn-primario btn-bloco" id="btn-cadastrar" aria-disabled="true">
+            <span class="icone" data-icone="check" aria-hidden="true"></span>
+            Cadastrar condomínio
+          </button>
+        </div>
+
+        <details class="conceito">
+          <summary>Como o fiscal é escolhido?</summary>
+          <p>A API devolve latitude e longitude do endereço. O sistema mede a distância de Haversine até o centro da carteira de cada fiscal de campo ativo e escolhe o mais próximo, desempatando por menor carga e depois por ID. Coordenadores nunca recebem condomínios.</p>
+        </details>
+      </section>
+    </div>
+  </aside>
+</div>
+
+<div class="toasts" id="toasts" role="region" aria-label="Notificações"></div>
+
+<dialog id="dialogo" aria-labelledby="dialogo-titulo" aria-describedby="dialogo-texto">
+  <form method="dialog" class="dialogo-corpo">
+    <h2 id="dialogo-titulo"></h2>
+    <p id="dialogo-texto"></p>
+    <div class="dialogo-acoes">
+      <button type="submit" value="cancelar" class="btn" id="dialogo-cancelar" autofocus>Cancelar</button>
+      <button type="submit" value="confirmar" class="btn btn-primario" id="dialogo-confirmar">Confirmar</button>
+    </div>
+  </form>
+</dialog>
+
+<noscript>O Quadrante precisa de JavaScript para funcionar.</noscript>
+
+<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/leaflet-markercluster/leaflet.markercluster.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

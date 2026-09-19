@@ -9,8 +9,7 @@
 coverage.out
 *.cover
 
-# notebooks / python (camada didática em estruturas-dados-python/)
-.ipynb_checkpoints/
+# python
 __pycache__/
 *.pyc
 .venv/
@@ -20,3 +19,6 @@ venv/
 .vscode/
 .idea/
 .DS_Store
+
+# segredos
+.env

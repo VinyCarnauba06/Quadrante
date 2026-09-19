@@ -20,7 +20,7 @@ from datetime import datetime
 from typing import Optional
 
 from backend.domain.ausencia import Ausencia, Realocacao
-from backend.domain.condominio import Condominio
+from backend.domain.condominio import Condominio, GEOCODE_OK
 from backend.domain.fiscal import Fiscal, PAPEL_FISCAL_CAMPO
 from backend.domain.rota import Rota
 from backend.estruturas import Vetor, ListaEncadeada, Pilha, Fila
@@ -99,6 +99,12 @@ class Store:
             self._titular_de[cid] = fiscal_titular_id
             self._carteira_de(fiscal_titular_id).inserir_no_fim(condominio)
             return cid
+
+    def adicionar_condominio(
+        self, nome: str, endereco: str, lat: float, lng: float, fiscal_titular_id: str
+    ) -> Condominio:
+        cid = self.seed_condominio(nome, endereco, lat, lng, GEOCODE_OK, fiscal_titular_id)
+        return self._condominios[cid]
 
     # ---- FiscalRepository -------------------------------------------------
 

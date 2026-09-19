@@ -186,34 +186,59 @@ def _cluster_vizinho_com_folga(p: GeoPonto, centroides: list[GeoPonto], contagem
 
 
 def _rebalancear(pontos: list[_PontoCluster], atribuicao: list[int], centroides: list[GeoPonto]) -> None:
-    n, k = len(pontos), len(centroides)
-    if k == 0:
+    n: int = len(pontos)
+    k: int = len(centroides)
+    if k == 0 or n == 0:
         return
 
-    tamanho_medio = n / k
-    limite_maximo = max(1, int(tamanho_medio * TOLERANCIA_BALANCEAMENTO))
+    tamanho_medio: float = n / k
+    limite_maximo: int = max(1, int(tamanho_medio * TOLERANCIA_BALANCEAMENTO))
+    limite_minimo: int = max(1, int(tamanho_medio / TOLERANCIA_BALANCEAMENTO))
 
-    contagem = [0] * k
+    contagem: list[int] = [0] * k
     for c in atribuicao:
         contagem[c] += 1
 
     for cluster in range(k):
         while contagem[cluster] > limite_maximo:
-            idx_mais_distante, dist_max = -1, -1.0
+            idx_mais_distante: int = -1
+            dist_max: float = -1.0
             for i, p in enumerate(pontos):
                 if atribuicao[i] != cluster:
                     continue
-                d = haversine_metros(p.geo, centroides[cluster])
+                d: float = haversine_metros(p.geo, centroides[cluster])
                 if d > dist_max:
-                    idx_mais_distante, dist_max = i, d
+                    idx_mais_distante = i
+                    dist_max = d
             if idx_mais_distante == -1:
                 break
 
-            destino = _cluster_vizinho_com_folga(pontos[idx_mais_distante].geo, centroides, contagem, limite_maximo, cluster)
+            destino: int = _cluster_vizinho_com_folga(pontos[idx_mais_distante].geo, centroides, contagem, limite_maximo, cluster)
             if destino == -1:
                 break
 
             atribuicao[idx_mais_distante] = destino
             contagem[cluster] -= 1
             contagem[destino] += 1
+
+    for cluster in range(k):
+        while contagem[cluster] < limite_minimo:
+            melhor_ponto: int = -1
+            menor_dist: float = -1.0
+            for i, p in enumerate(pontos):
+                origem: int = atribuicao[i]
+                if origem == cluster or contagem[origem] <= limite_minimo:
+                    continue
+                d = haversine_metros(p.geo, centroides[cluster])
+                if melhor_ponto == -1 or d < menor_dist:
+                    melhor_ponto = i
+                    menor_dist = d
+            if melhor_ponto == -1:
+                break
+
+            origem = atribuicao[melhor_ponto]
+            atribuicao[melhor_ponto] = cluster
+            contagem[origem] -= 1
+            contagem[cluster] += 1
+
 

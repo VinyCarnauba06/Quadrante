@@ -46,7 +46,7 @@ As distâncias são calculadas a partir de coordenadas. A rota é uma **estimati
 | Fila (FIFO) | Solicitações de ausência, atendidas na ordem de chegada. |
 | Pilha (LIFO) | Histórico para desfazer a realocação mais recente. |
 
-As implementações estão em [`quadrante-python/backend/estruturas/`](quadrante-python/backend/estruturas/). Há também um [notebook didático](estruturas-dados-python/quadrante_estruturas_dados.ipynb) com uma versão simplificada do domínio e exercícios de Estruturas de Dados.
+As implementações estão em [`quadrante-python/backend/estruturas/`](quadrante-python/backend/estruturas/).
 
 ## Tecnologias
 
@@ -81,7 +81,6 @@ python -m pytest
 
 ```text
 .
-|-- estruturas-dados-python/   # Notebook didático
 `-- quadrante-python/
     |-- app.py                  # Rotas Flask e página inicial
     |-- backend/

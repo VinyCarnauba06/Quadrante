@@ -164,3 +164,24 @@ def test_haversine_e_simetrico_e_zero_para_o_mesmo_ponto():
     p2 = GeoPonto("b", -9.65, -35.75)
     assert haversine_metros(p1, p1) == 0
     assert haversine_metros(p1, p2) == pytest.approx(haversine_metros(p2, p1))
+
+
+def test_clustering_balanceamento_de_carga_distribui_equitativamente():
+    store = Store()
+    carregar(CAMINHO_SEED, store)
+    clustering = ClusteringService(store)
+
+    sugestao = clustering.sugerir_redistribuicao()
+    fiscais = store.fiscais_de_campo()
+    contagens: dict[str, int] = {f.id: 0 for f in fiscais}
+    for a in sugestao.atribuicoes:
+        if a.fiscal_sugerido_id:
+            contagens[a.fiscal_sugerido_id] += 1
+
+    media: float = len(sugestao.atribuicoes) / len(fiscais)
+    limite_min: int = max(1, int(media / 1.3))
+    limite_max: int = max(1, int(media * 1.3))
+
+    for fid, total in contagens.items():
+        assert limite_min <= total <= limite_max
+

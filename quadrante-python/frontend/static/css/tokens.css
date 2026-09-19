@@ -1,0 +1,67 @@
+:root {
+  color-scheme: light;
+
+  --fonte-texto: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --fonte-dado: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --texto-base: 0.9375rem;
+  --texto-pequeno: 0.8125rem;
+  --texto-micro: 0.75rem;
+  --texto-titulo-1: 1.125rem;
+  --texto-titulo-2: 1rem;
+  --texto-numero: 1.5rem;
+
+  --papel: #f2efe7;
+  --superficie: #fbfaf6;
+  --superficie-rebaixada: #e9e5d9;
+  --borda: #d8d2c2;
+  --borda-forte: #8f8874;
+  --texto: #1b211f;
+  --texto-suave: #566059;
+
+  --marca: #0e5a5f;
+  --marca-forte: #0a4448;
+  --marca-suave: #daeae9;
+  --sobre-marca: #ffffff;
+
+  --sinal: #c2410c;
+  --sinal-forte: #9f3409;
+  --sinal-texto: #b23a0a;
+  --sinal-suave: #fbe6d9;
+
+  --ok-texto: #1f6b33;
+  --ok-suave: #e0efe3;
+  --perigo: #a3221a;
+  --perigo-forte: #8a1b14;
+  --perigo-suave: #fbe3e0;
+  --aviso-texto: #8a5000;
+  --aviso-suave: #fbedd0;
+
+  --coordenador: #7c8580;
+  --foco: #0e5a5f;
+
+  --espaco-1: 4px;
+  --espaco-2: 8px;
+  --espaco-3: 12px;
+  --espaco-4: 16px;
+  --espaco-5: 24px;
+  --espaco-6: 32px;
+
+  --raio-1: 4px;
+  --raio-2: 6px;
+  --raio-3: 10px;
+
+  --sombra-flutuante: 0 8px 24px rgb(27 33 31 / 0.16), 0 1px 3px rgb(27 33 31 / 0.14);
+
+  --duracao-rapida: 120ms;
+  --duracao: 200ms;
+  --suavizacao: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --altura-topo: 56px;
+  --largura-equipe: 300px;
+  --largura-lateral: 400px;
+  --alvo-toque: 44px;
+
+  --z-mapa-ui: 900;
+  --z-toast: 3000;
+}
