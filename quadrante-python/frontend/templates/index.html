@@ -136,11 +136,6 @@
             Processar próxima da fila
           </button>
         </div>
-
-        <details class="conceito">
-          <summary>Por que uma Fila?</summary>
-          <p>Quem avisou a ausência primeiro tem a carteira redistribuída primeiro. A Fila (FIFO), feita com ponteiros de início e de fim, enfileira e desenfileira em O(1) e impede que uma solicitação mais recente passe na frente só porque é mais fácil de resolver.</p>
-        </details>
       </section>
 
       <section class="painel-aba" role="tabpanel" id="painel-historico" aria-labelledby="tab-historico" tabindex="0" hidden>
@@ -159,11 +154,6 @@
             Reverter expiradas
           </button>
         </div>
-
-        <details class="conceito">
-          <summary>Por que uma Pilha?</summary>
-          <p>Desfazer sempre reverte a decisão mais recente. Se o coordenador mudou a carteira de dois fiscais hoje, desfazer a primeira sem desfazer a segunda deixaria o sistema num estado que ele nunca pediu. Isso é semântica de Pilha (LIFO), com topo acessível em O(1).</p>
-        </details>
       </section>
 
       <section class="painel-aba" role="tabpanel" id="painel-kmeans" aria-labelledby="tab-kmeans" tabindex="0" hidden>
@@ -177,11 +167,6 @@
           Calcular sugestão
         </button>
         <div id="resultado-clustering" aria-live="polite"></div>
-
-        <details class="conceito">
-          <summary>Como a sugestão é calculada?</summary>
-          <p>O k-means agrupa os condomínios em torno de um centro por fiscal de campo, usando distância geográfica. Depois, um passo de rebalanceamento move condomínios das zonas mais pesadas para as vizinhas mais leves, para que nenhum fiscal fique sobrecarregado.</p>
-        </details>
       </section>
 
       <section class="painel-aba" role="tabpanel" id="painel-cadastro" aria-labelledby="tab-cadastro" tabindex="0" data-geocodificacao="{{ 'ativa' if geoapify_chave else 'inativa' }}" hidden>
@@ -215,11 +200,6 @@
             Cadastrar condomínio
           </button>
         </div>
-
-        <details class="conceito">
-          <summary>Como o fiscal é escolhido?</summary>
-          <p>A API devolve latitude e longitude do endereço. O sistema mede a distância de Haversine até o centro da carteira de cada fiscal de campo ativo e escolhe o mais próximo, desempatando por menor carga e depois por ID. Coordenadores nunca recebem condomínios.</p>
-        </details>
       </section>
     </div>
   </aside>
