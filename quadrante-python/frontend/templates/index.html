@@ -50,10 +50,6 @@
     </div>
     <p class="resumo" id="resumo-equipe" aria-live="polite">Carregando equipe…</p>
     <ul class="lista-fiscais rolagem-fina" id="lista-fiscais" aria-label="Fiscais"></ul>
-    <details class="conceito">
-      <summary>Por que Vetor e Lista encadeada?</summary>
-      <p>O cadastro de fiscais fica em um Vetor dinâmico: acesso por índice em O(1) e crescimento por dobra de capacidade. A carteira de cada fiscal é uma Lista encadeada: como condomínios entram e saem o tempo todo por realocação, religar dois ponteiros é O(1) depois de achar o nó, contra O(n) para deslocar elementos num vetor.</p>
-    </details>
   </aside>
 
   <main class="palco" id="palco">
@@ -94,10 +90,6 @@
     <div class="lateral-conteudo rolagem-fina">
       <section class="painel-aba" role="tabpanel" id="painel-rota" aria-labelledby="tab-rota" tabindex="0">
         <div id="rota-conteudo"></div>
-        <details class="conceito">
-          <summary>Como a rota é calculada?</summary>
-          <p>O vizinho mais próximo monta uma rota inicial e o 2-opt troca trechos que se cruzam até não haver mais ganho. As distâncias usam a fórmula de Haversine sobre as coordenadas reais dos condomínios.</p>
-        </details>
       </section>
 
       <section class="painel-aba" role="tabpanel" id="painel-ausencias" aria-labelledby="tab-ausencias" tabindex="0" hidden>
