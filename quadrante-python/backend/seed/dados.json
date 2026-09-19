@@ -1,0 +1,958 @@
+{
+  "_obs": "Dados sintéticos para fins didáticos (disciplina de Estruturas de Dados). Nomes de condomínios e fiscais são fictícios; coordenadas correspondem a pontos reais de Maceió-AL usados apenas como massa de teste geográfica.",
+  "cidade_padrao": "Maceió, AL, Brasil",
+  "fiscais": [
+    {
+      "nome": "MARCOS",
+      "email": "marcos@exemplo.com",
+      "papel": "fiscal_campo",
+      "condominios": [
+        {
+          "nome": "Villa Cerro Verde",
+          "latitude": -9.663385,
+          "longitude": -35.7398,
+          "endereco_formatado": "Avenida Santa Rita de Cássia, 232, Farol, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Delta",
+          "latitude": -9.641251,
+          "longitude": -35.712957,
+          "endereco_formatado": "Rua Hélio Pradines, 225, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Manacá",
+          "latitude": -9.637801,
+          "longitude": -35.71264,
+          "endereco_formatado": "Avenida Doutor José Sampaio Luz, 327, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Jasmim",
+          "latitude": -9.626177,
+          "longitude": -35.711185,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 3713, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Sempre-Viva",
+          "latitude": -9.639768,
+          "longitude": -35.715399,
+          "endereco_formatado": "Rua General João Saleiro Pitão, 847, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Condomínio Ubá",
+          "latitude": -9.627362,
+          "longitude": -35.711638,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 6491, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Andorinha",
+          "latitude": -9.627192,
+          "longitude": -35.711276,
+          "endereco_formatado": "Rua Doutora Rosa Cabús, 70, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Espinela",
+          "latitude": -9.666381,
+          "longitude": -35.738027,
+          "endereco_formatado": "Rua Comendador Palmeira, 81, Farol, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Harmonia",
+          "latitude": -9.622915,
+          "longitude": -35.710581,
+          "endereco_formatado": "Rua Doutor Noel Nutels, 181, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Ébano",
+          "latitude": -9.621106,
+          "longitude": -35.708881,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 3649, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Ébano",
+          "latitude": -9.664009,
+          "longitude": -35.737898,
+          "endereco_formatado": "Rua Esther Silveira Costa, 18, Farol, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Iracema",
+          "latitude": -9.642788,
+          "longitude": -35.715409,
+          "endereco_formatado": "Rua João Gualberto Pereira do Carmo, 343, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Tabatinga",
+          "latitude": -9.625039,
+          "longitude": -35.711824,
+          "endereco_formatado": "Rua Olindina Campos Teixeira, 52, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Flamboyant",
+          "latitude": -9.641236,
+          "longitude": -35.712286,
+          "endereco_formatado": "Rua Durval Guimarães, 239, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Baobá",
+          "latitude": -9.625864,
+          "longitude": -35.706007,
+          "endereco_formatado": "Rua Industrial José Otávio Moreira, 73, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Eldorado",
+          "latitude": -9.654989,
+          "longitude": -35.744483,
+          "endereco_formatado": "Rua Ruthe Reis, 79, Poço, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Wailea",
+          "latitude": -9.636525,
+          "longitude": -35.716948,
+          "endereco_formatado": "Rua Manoel Ribeiro da Rocha, 87, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque  Furna",
+          "latitude": -9.626693,
+          "longitude": -35.710464,
+          "endereco_formatado": "Rua Carlos Polvina Cavalcanti, 49, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Fragata",
+          "latitude": -9.620084,
+          "longitude": -35.70838,
+          "endereco_formatado": "Rua Doutor Odilon Vasconcelos, 425, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Lago Sereno",
+          "latitude": -9.620863,
+          "longitude": -35.712804,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 3681, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Acácia",
+          "latitude": -9.64157,
+          "longitude": -35.715013,
+          "endereco_formatado": "Avenida Doutor José Sampaio Luz, 310, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        }
+      ]
+    },
+    {
+      "nome": "PAULA",
+      "email": "paula@exemplo.com",
+      "papel": "fiscal_campo",
+      "condominios": [
+        {
+          "nome": "Villa Miosótis",
+          "latitude": -9.662421,
+          "longitude": -35.737991,
+          "endereco_formatado": "Avenida Dom Antônio Brandão, 203, Farol, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Marimbá",
+          "latitude": -9.672312,
+          "longitude": -35.726457,
+          "endereco_formatado": "Rua José Correia Filho, 186, Ponta da Terra, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Golfinho",
+          "latitude": -9.639972,
+          "longitude": -35.712584,
+          "endereco_formatado": "Rua Odilon Vasconcelos, 448, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Gaivota",
+          "latitude": -9.622363,
+          "longitude": -35.713133,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 3749, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Alvorada",
+          "latitude": -9.621553,
+          "longitude": -35.707915,
+          "endereco_formatado": "Rua Doutor Noel Nutels, 16, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Jandaia",
+          "latitude": -9.665305,
+          "longitude": -35.738245,
+          "endereco_formatado": "Avenida Dom Antônio Brandão, 384, Farol, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Baobá",
+          "latitude": -9.651123,
+          "longitude": -35.73598,
+          "endereco_formatado": "Avenida Jornalista José Batista dos Santos, 62, Gruta de Lourdes, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Sinimbu",
+          "latitude": -9.648935,
+          "longitude": -35.735526,
+          "endereco_formatado": "Rua Danúsia de Menezes Brandão Ayres, 61, Gruta de Lourdes, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Laçador",
+          "latitude": -9.642258,
+          "longitude": -35.716226,
+          "endereco_formatado": "Avenida Professor Vital Barbosa, 231, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Zabelê",
+          "latitude": -9.64402,
+          "longitude": -35.736924,
+          "endereco_formatado": "Rua Maria Nuza Gomes Barreto, 35, Gruta de Lourdes, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Roseira",
+          "latitude": -9.651273,
+          "longitude": -35.740623,
+          "endereco_formatado": "Rua Publicitário Ranildo Cavalcante, 118, Gruta de Lourdes, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Betânia",
+          "latitude": -9.621365,
+          "longitude": -35.708552,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 3481, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Gaivota",
+          "latitude": -9.663823,
+          "longitude": -35.732817,
+          "endereco_formatado": "Rua João Jucá, 172, Farol, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Juriti",
+          "latitude": -9.662684,
+          "longitude": -35.735329,
+          "endereco_formatado": "Rua Doutor Marinho de Gusmão, 72, Centro, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Colina",
+          "latitude": -9.664476,
+          "longitude": -35.730858,
+          "endereco_formatado": "Rua Jangadeiros Alagoanos, 1012, Pajuçara, Maceió - AL",
+          "geocode_status": "ok"
+        }
+      ]
+    },
+    {
+      "nome": "RAFAEL",
+      "email": "rafael@exemplo.com",
+      "papel": "fiscal_campo",
+      "condominios": [
+        {
+          "nome": "Edifício Jaçanã",
+          "latitude": -9.649278,
+          "longitude": -35.739756,
+          "endereco_formatado": "Rua Publicitário Ranildo Cavalcante, 100, Gruta de Lourdes, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Umbu",
+          "latitude": -9.638691,
+          "longitude": -35.709493,
+          "endereco_formatado": "Rua José Freire Moura, 235, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Rubi",
+          "latitude": -9.665168,
+          "longitude": -35.732743,
+          "endereco_formatado": "Avenida Doutor Antônio Gouveia, 317, Pajuçara, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Betânia",
+          "latitude": -9.636543,
+          "longitude": -35.711162,
+          "endereco_formatado": "Rua Carlos Tenório, 227, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Eldorado",
+          "latitude": -9.63622,
+          "longitude": -35.71217,
+          "endereco_formatado": "Avenida Professor Vital Barbosa, 772, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Horizonte",
+          "latitude": -9.642492,
+          "longitude": -35.713947,
+          "endereco_formatado": "Rua Desembargador Jerônimo de Albuquerque, 456, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Farol Novo",
+          "latitude": -9.656756,
+          "longitude": -35.743835,
+          "endereco_formatado": "Rua Luiz Campos Teixeira, 874, Poço, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Quaresma",
+          "latitude": -9.638544,
+          "longitude": -35.711523,
+          "endereco_formatado": "Rua General João Saleiro Pitão, 1204, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Sempre-Viva",
+          "latitude": -9.663086,
+          "longitude": -35.729627,
+          "endereco_formatado": "Avenida Doutor Antônio Gouveia, 1057, Pajuçara, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Enseada",
+          "latitude": -9.638094,
+          "longitude": -35.715266,
+          "endereco_formatado": "Travessa Antônio Maciel de Oliveira, 199, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Nazaré",
+          "latitude": -9.635784,
+          "longitude": -35.714008,
+          "endereco_formatado": "Rua Deputado José Lages, 546, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Tejo",
+          "latitude": -9.6408,
+          "longitude": -35.715214,
+          "endereco_formatado": "Rua Carlos Tenório, 1925, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Nazaré",
+          "latitude": -9.639895,
+          "longitude": -35.711541,
+          "endereco_formatado": "Avenida Professor Sandoval Arroxelas, 790, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Dendê",
+          "latitude": -9.641782,
+          "longitude": -35.711715,
+          "endereco_formatado": "Rua Desembargador Jerônimo de Albuquerque, 309, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Estrela do Mar",
+          "latitude": -9.6362,
+          "longitude": -35.71429,
+          "endereco_formatado": "Rua Desportista Humberto Guimarães, 735, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Grumari",
+          "latitude": -9.621663,
+          "longitude": -35.710123,
+          "endereco_formatado": "Rua Arthur Bulhões, 107, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Zabelê",
+          "latitude": -9.635425,
+          "longitude": -35.71277,
+          "endereco_formatado": "Avenida Professor Vital Barbosa, 882, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Espinela",
+          "latitude": -9.655804,
+          "longitude": -35.743248,
+          "endereco_formatado": "Rua Lourenço de Souza Alencar, 89, Poço, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Damasco",
+          "latitude": -9.635342,
+          "longitude": -35.714307,
+          "endereco_formatado": "Rua Desportista Humberto Guimarães, 342, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Kir Real",
+          "latitude": -9.639625,
+          "longitude": -35.716762,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 2939, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Quixaba",
+          "latitude": -9.637108,
+          "longitude": -35.711586,
+          "endereco_formatado": "Rua Silvio Carlos Lunna Viana, 2089, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        }
+      ]
+    },
+    {
+      "nome": "TIAGO",
+      "email": "tiago@exemplo.com",
+      "papel": "fiscal_campo",
+      "condominios": [
+        {
+          "nome": "Edifício Marimbá",
+          "latitude": -9.627779,
+          "longitude": -35.725345,
+          "endereco_formatado": "Avenida Doutor Mário Nunes Vieira, 900, Mangabeiras, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Residencial Laçador",
+          "latitude": -9.622816,
+          "longitude": -35.708627,
+          "endereco_formatado": "Avenida Doutor Mário Nunes Vieira, 297, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Quaresma",
+          "latitude": -9.666939,
+          "longitude": -35.73137,
+          "endereco_formatado": "Avenida Silvio Carlos Viana, 1515, Pajuçara, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Marimbá",
+          "latitude": -9.626631,
+          "longitude": -35.707667,
+          "endereco_formatado": "Rua São Francisco de Assis, 190, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Andorinha",
+          "latitude": -9.635083,
+          "longitude": -35.712726,
+          "endereco_formatado": "Avenida Silvio Carlos Viana, 1709, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Urucum",
+          "latitude": -9.639303,
+          "longitude": -35.709798,
+          "endereco_formatado": "Avenida Silvio Carlos Viana, 1645, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Guaramiranga",
+          "latitude": -9.63871,
+          "longitude": -35.709215,
+          "endereco_formatado": "Rua Senador Rui Palmeira, 230, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Sempre-Viva",
+          "latitude": -9.623156,
+          "longitude": -35.705686,
+          "endereco_formatado": "Rua General Newton de Andrade Cavalcante, 4285, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Jasmim",
+          "latitude": -9.64014,
+          "longitude": -35.715273,
+          "endereco_formatado": "Rua José Sampaio Luz, 267, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Cristal",
+          "latitude": -9.623634,
+          "longitude": -35.726214,
+          "endereco_formatado": "Rua Nelson de Azevedo Souza, 345, Mangabeiras, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Guaramiranga",
+          "latitude": -9.636665,
+          "longitude": -35.712237,
+          "endereco_formatado": "Avenida Senador Rui Palmeira, 207, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Tejo",
+          "latitude": -9.621257,
+          "longitude": -35.707292,
+          "endereco_formatado": "Rua Walfrido Rocha, 115, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Ventania",
+          "latitude": -9.620137,
+          "longitude": -35.705949,
+          "endereco_formatado": "Rua Carlos Gomes da Silva, 41, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Delta",
+          "latitude": -9.637718,
+          "longitude": -35.716704,
+          "endereco_formatado": "Rua Engenheiro Mário de Gusmão, 113, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Residencial Estrela do Mar",
+          "latitude": -9.642814,
+          "longitude": -35.71321,
+          "endereco_formatado": "Avenida Silvio Carlos Viana, 1765, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Villa Sempre-Viva",
+          "latitude": -9.621443,
+          "longitude": -35.712851,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 6615, Jatiúca, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Edifício Harmonia",
+          "latitude": -9.624597,
+          "longitude": -35.712812,
+          "endereco_formatado": "Rua Carlos Gomes da Silva, 211, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Noruega",
+          "latitude": -9.640522,
+          "longitude": -35.716955,
+          "endereco_formatado": "Rua Machado Lemos, 245, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Peroba",
+          "latitude": -9.625362,
+          "longitude": -35.709313,
+          "endereco_formatado": "Rua Professor Nabuco Lopes, 171, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        }
+      ]
+    },
+    {
+      "nome": "LETICIA",
+      "email": "leticia@exemplo.com",
+      "papel": "fiscal_campo",
+      "condominios": [
+        {
+          "nome": "Parque Noruega",
+          "latitude": -9.626394,
+          "longitude": -35.707202,
+          "endereco_formatado": "Avenida Doutor Mário Nunes Vieira, 113, Jatiúca, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Condomínio Wailea",
+          "latitude": -9.642557,
+          "longitude": -35.715309,
+          "endereco_formatado": "Rua Prefeito Abdon Arroxelas, 150, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Edifício Dório",
+          "latitude": -9.640939,
+          "longitude": -35.713767,
+          "endereco_formatado": "Rua Manoel Ribeiro da Rocha, 160, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Icaraí",
+          "latitude": -9.63689,
+          "longitude": -35.71417,
+          "endereco_formatado": "Rua Senador Rui Palmeira, 926, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Colina",
+          "latitude": -9.63744,
+          "longitude": -35.709622,
+          "endereco_formatado": "Rua Hélio Pradines, 783, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Oiti",
+          "latitude": -9.641953,
+          "longitude": -35.710089,
+          "endereco_formatado": "Rua José Freire Moura, 313, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Ventania",
+          "latitude": -9.623203,
+          "longitude": -35.707522,
+          "endereco_formatado": "Avenida Hamilton de Barros Soutinho, 259, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Lmisboa",
+          "latitude": -9.638136,
+          "longitude": -35.713734,
+          "endereco_formatado": "Rua Deputado Rubens Canuto, 180, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Kairós",
+          "latitude": -9.642228,
+          "longitude": -35.715851,
+          "endereco_formatado": "Rua Professor Sandoval Arroxelas, 520, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Edifício Iracema",
+          "latitude": -9.626607,
+          "longitude": -35.712079,
+          "endereco_formatado": "Rua Prefeito Abdon Arroxelas, 58, Jatiúca, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Villa Palmeira Real",
+          "latitude": -9.641836,
+          "longitude": -35.715339,
+          "endereco_formatado": "Rua Carlos Tenório, 425, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Residencial Oiti",
+          "latitude": -9.623512,
+          "longitude": -35.707335,
+          "endereco_formatado": "Rua Prefeito Abdon Arroxelas, 61, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Juriti",
+          "latitude": -9.621616,
+          "longitude": -35.706731,
+          "endereco_formatado": "Rua São Francisco de Assis, 221, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Cerro Verde",
+          "latitude": -9.627062,
+          "longitude": -35.706921,
+          "endereco_formatado": "Avenida Hamilton de Barros Soutinho, 343, Jatiúca, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Parque Imbé",
+          "latitude": -9.641512,
+          "longitude": -35.716421,
+          "endereco_formatado": "Avenida Senador Roberto Kennedy, 1935, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Condomínio Noruega",
+          "latitude": -9.640698,
+          "longitude": -35.712314,
+          "endereco_formatado": "Rua Doutor José Júlio Sauher, 68, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Residencial Douradilha",
+          "latitude": -9.642619,
+          "longitude": -35.715269,
+          "endereco_formatado": "Rua Doutor Antônio Cansanção, 760, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Mandacaru",
+          "latitude": -9.624807,
+          "longitude": -35.706921,
+          "endereco_formatado": "Rua Empresário Carlos da Silva Nogueira, 916, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Sol Nascente",
+          "latitude": -9.624805,
+          "longitude": -35.710187,
+          "endereco_formatado": "Rua Doutor José Afonso de Melo, 45, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Ubatuba",
+          "latitude": -9.640032,
+          "longitude": -35.716259,
+          "endereco_formatado": "Rua Doutor Antônio Cansanção, 1045, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        }
+      ]
+    },
+    {
+      "nome": "FELIPE",
+      "email": "felipe@exemplo.com",
+      "papel": "fiscal_campo",
+      "condominios": [
+        {
+          "nome": "Parque Oliveira",
+          "latitude": -9.635963,
+          "longitude": -35.709616,
+          "endereco_formatado": "Rua Doutor José Corrêa Filho, 61, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Enseada",
+          "latitude": -9.637227,
+          "longitude": -35.713811,
+          "endereco_formatado": "Avenida Silvio Carlos Viana, 2119, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Vitória-Régia",
+          "latitude": -9.639448,
+          "longitude": -35.714509,
+          "endereco_formatado": "Avenida Professor Vital Barbosa, 219, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Manacá",
+          "latitude": -9.637765,
+          "longitude": -35.711773,
+          "endereco_formatado": "Rua Lourenço Moreira da Silva, 117, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Quixaba",
+          "latitude": -9.625515,
+          "longitude": -35.706506,
+          "endereco_formatado": "Rua Hamilton de Barros Soutinho, 301, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Búzios",
+          "latitude": -9.637234,
+          "longitude": -35.715251,
+          "endereco_formatado": "Rua Professor Sandoval Arroxelas, 230, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Edifício Nascente",
+          "latitude": -9.636526,
+          "longitude": -35.711606,
+          "endereco_formatado": "Rua Durval Guimarães, 900, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Tabatinga",
+          "latitude": -9.641002,
+          "longitude": -35.714629,
+          "endereco_formatado": "Rua João Gualberto Pereira do Carmo, 46, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Nébula",
+          "latitude": -9.636988,
+          "longitude": -35.716359,
+          "endereco_formatado": "Rua Prefeito Abdon Arroxelas, 305, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Itamaracá",
+          "latitude": -9.624497,
+          "longitude": -35.70579,
+          "endereco_formatado": "Rua Paulina Maria Mendonça, 514, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Tejo",
+          "latitude": -9.64095,
+          "longitude": -35.712975,
+          "endereco_formatado": "Rua Professor Vital Barbosa, 752, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Condomínio Sol Nascente",
+          "latitude": -9.635742,
+          "longitude": -35.710003,
+          "endereco_formatado": "Rua Lourenço Moreira da Silva, 452, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Jequitibá",
+          "latitude": -9.636694,
+          "longitude": -35.712734,
+          "endereco_formatado": "Rua Doutor Antônio Cansanção, 92, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Parque Nébula",
+          "latitude": -9.635561,
+          "longitude": -35.714945,
+          "endereco_formatado": "Rua General João Saleiro Pitão, 1175, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Zabelê",
+          "latitude": -9.620947,
+          "longitude": -35.710225,
+          "endereco_formatado": "Rua Industrial Climério Sarmento, 41, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Miosótis",
+          "latitude": -9.637734,
+          "longitude": -35.712112,
+          "endereco_formatado": "Rua Deputado Rubens Canuto, 61, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Condomínio Orquídea",
+          "latitude": -9.640742,
+          "longitude": -35.711574,
+          "endereco_formatado": "Rua Doutor Antônio Cansanção, 181, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Villa Jequitibá",
+          "latitude": -9.638166,
+          "longitude": -35.709102,
+          "endereco_formatado": "Rua Deputado José Lages, 246, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Villa Betânia",
+          "latitude": -9.637666,
+          "longitude": -35.71348,
+          "endereco_formatado": "Rua Hélio Pradines, 494, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Aurora",
+          "latitude": -9.615961,
+          "longitude": -35.7149,
+          "endereco_formatado": "Rua Rodolfo Abreu, 142, Cruz das Almas, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Orquídea",
+          "latitude": -9.640237,
+          "longitude": -35.711664,
+          "endereco_formatado": "Rua Prefeito Abdon Arroxelas, 667, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        }
+      ]
+    },
+    {
+      "nome": "SONIA",
+      "email": "sonia@exemplo.com",
+      "papel": "coordenador",
+      "condominios": [
+        {
+          "nome": "Parque Jandaia",
+          "latitude": -9.637445,
+          "longitude": -35.709283,
+          "endereco_formatado": "Avenida Silvio Carlos Viana, 2475, Ponta Verde, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        },
+        {
+          "nome": "Edifício Ilhéus",
+          "latitude": -9.626454,
+          "longitude": -35.70818,
+          "endereco_formatado": "Avenida Álvaro Otacílio, 3815, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Caravela",
+          "latitude": -9.629627,
+          "longitude": -35.722379,
+          "endereco_formatado": "Avenida Comendador Gustavo Paiva, 3506, Mangabeiras, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Dunas",
+          "latitude": -9.622743,
+          "longitude": -35.707556,
+          "endereco_formatado": "Avenida Doutor Antônio Gomes de Barros, 625, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Parque Primavera",
+          "latitude": -9.62107,
+          "longitude": -35.71165,
+          "endereco_formatado": "Avenida Almirante Álvaro Calheiros, 161, Jatiúca, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        }
+      ]
+    },
+    {
+      "nome": "HENRIQUE",
+      "email": "henrique@exemplo.com",
+      "papel": "coordenador",
+      "condominios": [
+        {
+          "nome": "Condomínio Boa Vista",
+          "latitude": -9.636116,
+          "longitude": -35.714236,
+          "endereco_formatado": "Rua Hélio Pradines, 43, Ponta Verde, Maceió - AL",
+          "geocode_status": "ok"
+        }
+      ]
+    },
+    {
+      "nome": "REGINA",
+      "email": "regina@exemplo.com",
+      "papel": "coordenador",
+      "condominios": [
+        {
+          "nome": "Condomínio Maré Mansa",
+          "latitude": -9.624801,
+          "longitude": -35.712601,
+          "endereco_formatado": "Avenida Doutor Antônio Gomes de Barros, 79, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Edifício Palmeira Real",
+          "latitude": -9.623746,
+          "longitude": -35.71349,
+          "endereco_formatado": "Avenida Doutor Antônio Gomes de Barros, 123, Jatiúca, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Condomínio Mandacaru",
+          "latitude": -9.586516,
+          "longitude": -35.748622,
+          "endereco_formatado": "Avenida General Luiz de França Albuquerque, 10030, Guaxuma, Maceió - AL",
+          "geocode_status": "ok"
+        },
+        {
+          "nome": "Residencial Ypê Branco",
+          "latitude": -9.61302,
+          "longitude": -35.720661,
+          "endereco_formatado": "Rua Faixa de Servidão de Passagem 03, 529, Cruz das Almas, Maceió - AL",
+          "geocode_status": "precisa_revisao"
+        }
+      ]
+    }
+  ]
+}

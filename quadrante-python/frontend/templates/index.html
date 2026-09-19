@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadrante — Roteirização e Divisão Territorial</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Quadrante</h1>
+    <p>Roteirização e divisão territorial por proximidade geográfica — Estruturas de Dados</p>
+  </div>
+  <button id="btn-reset" class="perigo" title="Recarrega o estado real da Prolar AGE: 9 fiscais, 127 condomínios, nenhuma ausência ou realocação pendente">
+    Reiniciar demonstração
+  </button>
+</header>
+
+<main>
+  <div>
+    <div class="painel">
+      <h2>Fiscais</h2>
+      <div id="lista-fiscais" class="lista-fiscais"><p class="vazio">carregando…</p></div>
+      <p class="rodape-conceito">Cadastro em <strong>Vetor</strong> dinâmico; carteira de cada fiscal em uma <strong>Lista Encadeada</strong> própria.</p>
+    </div>
+
+    <div class="painel">
+      <h2>Registrar ausência</h2>
+      <form id="form-ausencia" class="form-ausencia">
+        <label>Fiscal
+          <select id="ausencia-fiscal" required></select>
+        </label>
+        <label>Motivo
+          <select id="ausencia-motivo">
+            <option value="ferias">Férias</option>
+            <option value="falta">Falta</option>
+            <option value="licenca">Licença</option>
+            <option value="outro">Outro</option>
+          </select>
+        </label>
+        <label>Início <input type="date" id="ausencia-inicio" required></label>
+        <label>Fim <input type="date" id="ausencia-fim" required></label>
+        <button type="submit" class="primario">Enfileirar solicitação</button>
+      </form>
+      <div id="fila-ausencias" class="fila-visual" style="margin-top:12px;"></div>
+      <div class="acoes">
+        <button id="btn-processar-fila">Processar próxima da fila</button>
+        <button id="btn-reverter-expiradas">Reverter realocações expiradas</button>
+      </div>
+      <div id="msg-ausencia"></div>
+      <p class="rodape-conceito">Fila (FIFO): quem avisou a ausência primeiro tem a carteira redistribuída primeiro — não é justo processar a segunda solicitação antes da primeira só porque chegou "mais fácil".</p>
+    </div>
+
+    <div class="painel">
+      <h2>Histórico de realocações (desfazer)</h2>
+      <div id="historico" class="pilha-visual"><p class="vazio">nenhuma realocação ainda</p></div>
+      <div class="acoes">
+        <button id="btn-desfazer" class="perigo">Desfazer a realocação do topo</button>
+      </div>
+      <p class="rodape-conceito">Pilha (LIFO): desfazer sempre reverte a decisão mais recente do coordenador — se ele mudou a carteira de dois fiscais hoje, desfazer a primeira mudança sem desfazer a segunda deixaria o sistema num estado que o coordenador nunca pediu.</p>
+    </div>
+  </div>
+
+  <div>
+    <div class="painel">
+      <h2 id="titulo-mapa">Mapa geral — carteira por fiscal</h2>
+      <div class="mapa-area">
+        <div id="mapa"></div>
+      </div>
+      <div id="info-rota"></div>
+    </div>
+
+    <div class="painel">
+      <h2>Redistribuição geográfica sugerida (k-means)</h2>
+      <button id="btn-sugerir">Rodar k-means geográfico + rebalanceamento</button>
+      <div id="resultado-clustering" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# binários / build
+/quadrante
+/demo
+*.exe
+*.out
+*.test
+
+# cobertura
+coverage.out
+*.cover
+
+# notebooks / python (camada didática em estruturas-dados-python/)
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# editores / SO
+.vscode/
+.idea/
+.DS_Store
