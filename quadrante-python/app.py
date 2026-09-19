@@ -8,13 +8,17 @@ import os
 import threading
 from datetime import datetime
 
-from flask import Flask, jsonify, request, render_template
+from typing import Optional
+
+from flask import Flask, jsonify, request, render_template, session
 
 from backend.config import carregar_configuracao
 from backend.domain.clustering import AtribuicaoSugerida
+from backend.domain.fiscal import PAPEL_ADMIN, PAPEL_OPERADOR, PAPEL_FISCAL_CAMPO, PAPEL_COORDENADOR, Fiscal
 from backend.infra.geoapify import GeoapifyGeocodificador
 from backend.repository.store import Store
 from backend.seed.loader import carregar
+from backend.service.auth_service import AuthService, CredenciaisInvalidasError, UsuarioInativoError
 from backend.service.cadastro_service import CadastroService, DadosInvalidosError, SemFiscalParaCadastroError
 from backend.service.clustering_service import ClusteringService
 from backend.service.geocoding_service import (
@@ -35,6 +39,7 @@ app = Flask(
     template_folder=os.path.join(BASE_DIR, "frontend", "templates"),
     static_folder=os.path.join(BASE_DIR, "frontend", "static"),
 )
+app.secret_key = os.environ.get("QUADRANTE_SECRET_KEY", "quadrante-segredo-sessao-2026")
 
 _lock = threading.Lock()
 _estado = {}
@@ -47,7 +52,15 @@ def _inicializar_estado():
     clustering = ClusteringService(store)
     realloc = ReallocationService(store, routing)
     cadastro = CadastroService(store, geocodificador)
-    return {"store": store, "routing": routing, "clustering": clustering, "realloc": realloc, "cadastro": cadastro}
+    auth = AuthService(store)
+    return {
+        "store": store,
+        "routing": routing,
+        "clustering": clustering,
+        "realloc": realloc,
+        "cadastro": cadastro,
+        "auth": auth,
+    }
 
 
 _estado.update(_inicializar_estado())
@@ -61,6 +74,91 @@ def _fiscal_para_json(f, carga_por_fiscal):
         "ativo": f.ativo,
         "qtd_condominios": carga_por_fiscal.get(f.id, 0),
     }
+
+
+def _usuario_atual() -> Optional[Fiscal]:
+    fiscal_id = session.get("fiscal_id")
+    if not fiscal_id:
+        return None
+    store = _estado["store"]
+    try:
+        return store.buscar_fiscal(fiscal_id)
+    except Exception:
+        return None
+
+
+def _exigir_papeis(*papeis_permitidos: str) -> tuple[bool, Optional[tuple]]:
+    usuario = _usuario_atual()
+    if usuario is None:
+        return True, None
+    if usuario.is_admin():
+        return True, None
+    if usuario.papel not in papeis_permitidos:
+        return False, (jsonify({"erro": "Acesso não autorizado para o seu perfil."}), 403)
+    return True, None
+
+
+@app.get("/api/auth/me")
+def auth_me():
+    usuario = _usuario_atual()
+    if usuario is None:
+        return jsonify({"autenticado": False, "usuario": None})
+    return jsonify({
+        "autenticado": True,
+        "usuario": {
+            "id": usuario.id,
+            "nome": usuario.nome,
+            "email": usuario.email,
+            "papel": usuario.papel,
+        },
+    })
+
+
+@app.get("/api/auth/contas-demo")
+def auth_contas_demo():
+    store = _estado["store"]
+    todos = store.listar(somente_ativos=True)
+    contas = []
+    for f in todos:
+        if f.papel in (PAPEL_ADMIN, PAPEL_OPERADOR, PAPEL_FISCAL_CAMPO):
+            contas.append({
+                "id": f.id,
+                "nome": f.nome,
+                "email": f.email,
+                "papel": f.papel,
+            })
+    return jsonify(contas)
+
+
+@app.post("/api/auth/login")
+def auth_login():
+    payload = request.get_json(silent=True) or {}
+    email = payload.get("email", "")
+    senha = payload.get("senha", "")
+    auth = _estado["auth"]
+    try:
+        fiscal = auth.autenticar(email, senha)
+    except CredenciaisInvalidasError as erro:
+        return jsonify({"erro": str(erro)}), 401
+    except UsuarioInativoError as erro:
+        return jsonify({"erro": str(erro)}), 403
+
+    session["fiscal_id"] = fiscal.id
+    return jsonify({
+        "autenticado": True,
+        "usuario": {
+            "id": fiscal.id,
+            "nome": fiscal.nome,
+            "email": fiscal.email,
+            "papel": fiscal.papel,
+        },
+    })
+
+
+@app.post("/api/auth/logout")
+def auth_logout():
+    session.clear()
+    return jsonify({"ok": True})
 
 
 @app.get("/")
@@ -99,6 +197,10 @@ def geocodificar():
 
 @app.post("/api/condominios")
 def cadastrar_condominio():
+    autorizado, erro_resp = _exigir_papeis(PAPEL_ADMIN, PAPEL_OPERADOR)
+    if not autorizado:
+        return erro_resp
+
     payload = request.get_json(silent=True) or {}
     cadastro = _estado["cadastro"]
     try:
@@ -128,14 +230,22 @@ def cadastrar_condominio():
 
 @app.get("/api/fiscais")
 def listar_fiscais():
+    usuario = _usuario_atual()
     store = _estado["store"]
     carga = store.carga_por_fiscal()
-    fiscais = sorted(store.listar(somente_ativos=True), key=lambda f: f.id)
+    if usuario and usuario.is_fiscal_campo():
+        fiscais = [store.buscar_fiscal(usuario.id)]
+    else:
+        fiscais = sorted(store.fiscais_de_campo(somente_ativos=True), key=lambda f: f.id)
     return jsonify([_fiscal_para_json(f, carga) for f in fiscais])
 
 
 @app.get("/api/fiscais/<fiscal_id>/rota")
 def gerar_rota(fiscal_id):
+    usuario = _usuario_atual()
+    if usuario and usuario.is_fiscal_campo() and usuario.id != fiscal_id:
+        return jsonify({"erro": "Acesso não autorizado à rota de outro fiscal."}), 403
+
     with _lock:
         routing = _estado["routing"]
         rota = routing.gerar_rota_do_dia(fiscal_id, datetime.utcnow())
@@ -164,9 +274,14 @@ def gerar_rota(fiscal_id):
 
 @app.get("/api/mapa-geral")
 def mapa_geral():
+    usuario = _usuario_atual()
     store = _estado["store"]
     fiscais = []
-    for f in sorted(store.listar(somente_ativos=True), key=lambda x: x.id):
+    lista_fiscais = sorted(store.fiscais_de_campo(somente_ativos=True), key=lambda x: x.id)
+    if usuario and usuario.is_fiscal_campo():
+        lista_fiscais = [f for f in lista_fiscais if f.id == usuario.id]
+
+    for f in lista_fiscais:
         condominios = [c for c in store.listar_por_fiscal(f.id) if c.tem_localizacao()]
         fiscais.append({
             "id": f.id,
@@ -231,6 +346,10 @@ def sugestao_clustering():
 
 @app.post("/api/clustering/aplicar")
 def aplicar_clustering():
+    autorizado, erro_resp = _exigir_papeis(PAPEL_ADMIN)
+    if not autorizado:
+        return erro_resp
+
     clustering = _estado["clustering"]
     payload = request.get_json(force=True) or {}
     atribuicoes = [
@@ -252,6 +371,10 @@ def aplicar_clustering():
 
 @app.post("/api/ausencias")
 def registrar_solicitacao_ausencia():
+    autorizado, erro_resp = _exigir_papeis(PAPEL_ADMIN, PAPEL_OPERADOR)
+    if not autorizado:
+        return erro_resp
+
     payload = request.get_json(force=True) or {}
     realloc = _estado["realloc"]
     try:
@@ -292,6 +415,10 @@ def ver_fila():
 
 @app.post("/api/ausencias/processar-proxima")
 def processar_proxima():
+    autorizado, erro_resp = _exigir_papeis(PAPEL_ADMIN, PAPEL_OPERADOR)
+    if not autorizado:
+        return erro_resp
+
     realloc = _estado["realloc"]
     with _lock:
         if len(_estado["store"].fila_solicitacoes_ausencia) == 0:
@@ -314,6 +441,10 @@ def processar_proxima():
 
 @app.post("/api/realocacoes/reverter-expiradas")
 def reverter_expiradas():
+    autorizado, erro_resp = _exigir_papeis(PAPEL_ADMIN, PAPEL_OPERADOR)
+    if not autorizado:
+        return erro_resp
+
     payload = request.get_json(force=True) or {}
     hoje = datetime.fromisoformat(payload["hoje"]) if payload.get("hoje") else datetime.utcnow()
     realloc = _estado["realloc"]
@@ -324,6 +455,10 @@ def reverter_expiradas():
 
 @app.post("/api/realocacoes/desfazer")
 def desfazer():
+    autorizado, erro_resp = _exigir_papeis(PAPEL_ADMIN)
+    if not autorizado:
+        return erro_resp
+
     realloc = _estado["realloc"]
     with _lock:
         desfeita = realloc.desfazer_ultima_realocacao()
@@ -372,6 +507,10 @@ def historico():
 
 @app.post("/api/reset")
 def resetar():
+    autorizado, erro_resp = _exigir_papeis(PAPEL_ADMIN)
+    if not autorizado:
+        return erro_resp
+
     with _lock:
         _estado.update(_inicializar_estado())
     return jsonify({"ok": True})

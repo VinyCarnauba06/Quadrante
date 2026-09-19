@@ -25,7 +25,7 @@ function renderizar() {
     definirCartao(
       `Rota de ${nomeProprio(fiscal.nome)}`,
       `${quilometros(estado.rota.distancia_total_km)} km · ${plural(paradas.length, "parada", "paradas")} · ${origem}`,
-      true,
+      estado.usuario?.papel !== "fiscal_campo",
     );
     return;
   }

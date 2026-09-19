@@ -15,7 +15,9 @@ function idParaDestaque() {
 }
 
 function alternarSelecao(fiscal) {
+  if (estado.usuario?.papel === "fiscal_campo" && fiscal.id !== estado.usuario.id) return;
   const jaSelecionado = estado.selecionadoId === fiscal.id;
+  if (jaSelecionado && estado.usuario?.papel === "fiscal_campo") return;
   selecionar(jaSelecionado ? null : fiscal.id);
   if (!jaSelecionado && fiscal.papel === "fiscal_campo") abrirAba("rota");
 }

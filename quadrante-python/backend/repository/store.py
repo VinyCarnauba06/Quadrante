@@ -44,6 +44,7 @@ class Store:
         self._seq = 0
 
         self.fiscais = Vetor()
+        self._fiscais_por_email: dict[str, Fiscal] = {}
 
         # fiscal_id -> ListaEncadeada[Condominio] (a "carteira" propriamente dita)
         self._carteiras: dict[str, ListaEncadeada] = {}
@@ -74,10 +75,27 @@ class Store:
 
     # ---- seed -----------------------------------------------------------
 
-    def seed_fiscal(self, nome: str, email: str, papel: str) -> str:
+    def seed_fiscal(
+        self,
+        nome: str,
+        email: str,
+        papel: str,
+        senha_hash: str = "",
+        salt: str = "",
+    ) -> str:
         with self._lock:
             fid = self._novo_id("fisc")
-            self.fiscais.adicionar(Fiscal(id=fid, nome=nome, email=email, papel=papel))
+            fiscal = Fiscal(
+                id=fid,
+                nome=nome,
+                email=email,
+                papel=papel,
+                senha_hash=senha_hash,
+                salt=salt,
+            )
+            self.fiscais.adicionar(fiscal)
+            if email:
+                self._fiscais_por_email[email.strip().lower()] = fiscal
             self._carteiras[fid] = ListaEncadeada()
             return fid
 
@@ -119,6 +137,19 @@ class Store:
         if fiscal is None:
             raise FiscalNaoEncontradoError(fiscal_id)
         return fiscal
+
+    def buscar_por_email(self, email: str) -> Optional[Fiscal]:
+        with self._lock:
+            return self._fiscais_por_email.get(email.strip().lower())
+
+    def atualizar_credenciais(self, fiscal_id: str, senha_hash: str, salt: str) -> None:
+        with self._lock:
+            fiscal = self.fiscais.encontrar(lambda f: f.id == fiscal_id)
+            if fiscal is None:
+                raise FiscalNaoEncontradoError(fiscal_id)
+            fiscal.senha_hash = senha_hash
+            fiscal.salt = salt
+
 
     # ---- CondominioRepository ----------------------------------------------
 

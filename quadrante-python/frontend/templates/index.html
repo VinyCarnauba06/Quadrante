@@ -36,9 +36,19 @@
         <span class="ponto" aria-hidden="true"></span>
         <span id="status-api-texto">conectando…</span>
       </p>
+      <div class="usuario-sessao" id="usuario-sessao">
+        <button type="button" class="btn btn-pequeno btn-perfil" id="btn-perfil" aria-haspopup="dialog" title="Alternar perfil de acesso">
+          <span class="icone" data-icone="usuario" aria-hidden="true"></span>
+          <span id="usuario-nome">Entrar</span>
+          <span class="badge-papel" id="usuario-badge" hidden></span>
+        </button>
+        <button type="button" class="btn btn-pequeno btn-icone" id="btn-logout" aria-label="Sair da sessão" title="Sair da sessão" hidden>
+          <span class="icone" data-icone="sair" aria-hidden="true"></span>
+        </button>
+      </div>
       <button type="button" class="btn" id="btn-reset" aria-label="Reiniciar demonstração" title="Recarrega o estado inicial: fiscais, condomínios, sem ausências nem realocações">
         <span class="icone" data-icone="reiniciar" aria-hidden="true"></span>
-        <span class="rotulo-btn">Reiniciar demonstração</span>
+        <span class="rotulo-btn">Reiniciar</span>
       </button>
     </div>
   </header>
@@ -209,6 +219,56 @@
       <button type="submit" value="confirmar" class="btn btn-primario" id="dialogo-confirmar">Confirmar</button>
     </div>
   </form>
+</dialog>
+
+<dialog id="modal-login" aria-labelledby="modal-login-titulo">
+  <div class="dialogo-corpo">
+    <div class="modal-cabecalho">
+      <h2 id="modal-login-titulo">Acesso ao Quadrante</h2>
+      <button type="button" class="btn btn-pequeno btn-icone" id="btn-fechar-login" aria-label="Fechar">
+        <span class="icone" data-icone="fechar" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div class="secao-demo">
+      <p class="legenda-demo">Acesso rápido para demonstração:</p>
+      <div class="grid-perfis-demo" id="grid-perfis-demo">
+        <button type="button" class="btn-card-perfil" data-email="admin@quadrante.com" data-senha="admin123">
+          <span class="badge-papel badge-papel-admin">Admin</span>
+          <strong>Administrador</strong>
+          <span>Acesso irrestrito ao sistema</span>
+        </button>
+        <button type="button" class="btn-card-perfil" data-email="operador@quadrante.com" data-senha="operador123">
+          <span class="badge-papel badge-papel-operador">Operador</span>
+          <strong>Operador de Campo</strong>
+          <span>Ausências, despachos e rotas</span>
+        </button>
+        <button type="button" class="btn-card-perfil" data-email="alessandro@quadrante.com" data-senha="fiscal123">
+          <span class="badge-papel badge-papel-fiscal">Fiscal</span>
+          <strong>Fiscal de Campo</strong>
+          <span>Visualização da rota pessoal</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="divisor-ou"><span>ou credenciais manuais</span></div>
+
+    <form id="form-login" class="form" novalidate>
+      <div class="campo">
+        <label for="login-email">E-mail</label>
+        <input type="email" id="login-email" required autocomplete="username" placeholder="seu.email@quadrante.com">
+      </div>
+      <div class="campo">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <p class="alerta-erro" id="login-erro" hidden></p>
+      <div class="dialogo-acoes">
+        <button type="button" class="btn" id="btn-cancelar-login">Cancelar</button>
+        <button type="submit" class="btn btn-primario" id="btn-entrar-login">Entrar</button>
+      </div>
+    </form>
+  </div>
 </dialog>
 
 <noscript>O Quadrante precisa de JavaScript para funcionar.</noscript>

@@ -9,6 +9,7 @@ export const estado = {
   sugestao: null,
   aplicacaoClustering: null,
   ordemRota: 0,
+  usuario: null,
 };
 
 const ouvintes = new Map();
