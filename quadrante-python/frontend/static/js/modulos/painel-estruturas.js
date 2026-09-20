@@ -157,8 +157,11 @@ async function executarModoDemo(botao) {
   try {
     notificar.info("Simulação Didática (1/4)", "1. Enfileirando solicitação de ausência na Fila FIFO...");
     const hoje = new Date().toISOString().slice(0, 10);
+    const fiscais = estado.fiscais || [];
+    const fiscalAlvo = fiscais.find(f => f.papel === "fiscal_campo") || { id: "fisc-002" };
+    
     await enfileirarAusencia({
-      fiscal_id: "fisc-002",
+      fiscal_id: fiscalAlvo.id,
       motivo: "saude",
       data_inicio: hoje,
       data_fim: hoje,
