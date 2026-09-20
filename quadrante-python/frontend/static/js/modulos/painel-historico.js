@@ -42,7 +42,7 @@ function renderizar() {
       estadoVazio({
         nomeIcone: "pilha",
         titulo: "Nenhuma realocação ainda",
-        texto: "Processe uma solicitação da fila ou aplique a redistribuição do k-means. Cada mudança empilha aqui.",
+        texto: "Processe uma solicitação da fila ou aplique a redistribuição territorial. Cada mudança empilha aqui.",
       }),
     );
     return;

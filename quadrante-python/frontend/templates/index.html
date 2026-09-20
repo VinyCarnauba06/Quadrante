@@ -6,6 +6,7 @@
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#0e5a5f">
 <title>Quadrante — roteirização e divisão territorial</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='5' fill='%23fbfaf6'/%3E%3Cpath d='M16 5v22M5 16h22' stroke='%230e5a5f' stroke-width='2'/%3E%3Crect x='16' y='5' width='11' height='11' fill='%23c2410c'/%3E%3C/svg%3E">
 <link rel="preload" href="{{ url_for('static', filename='fonts/ibm-plex-sans-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ url_for('static', filename='fonts/ibm-plex-sans-latin-600-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}">
@@ -16,9 +17,66 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
 </head>
 <body>
-<a class="pular" href="#mapa">Pular para o mapa</a>
+<div id="tela-login" class="tela-login">
+  <div class="card-login">
+    <div class="login-cabecalho">
+      <svg class="marca-logo-login" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="5" fill="#fbfaf6"/>
+        <path d="M16 5v22M5 16h22" stroke="#0e5a5f" stroke-width="2"/>
+        <rect x="16" y="5" width="11" height="11" fill="#c2410c"/>
+      </svg>
+      <div>
+        <h1 class="login-titulo">Quadrante</h1>
+        <p class="login-subtitulo">Roteirização e divisão territorial de fiscais</p>
+      </div>
+    </div>
 
-<div class="app">
+    <div class="secao-demo">
+      <p class="legenda-demo">Acesso rápido para demonstração:</p>
+      <div class="grid-perfis-demo">
+        <button type="button" class="btn-card-perfil btn-demo-tela" data-email="admin@quadrante.com" data-senha="admin123">
+          <span class="badge-papel badge-papel-admin">Admin</span>
+          <strong>Administrador</strong>
+          <span>Acesso total e redistribuição</span>
+        </button>
+        <button type="button" class="btn-card-perfil btn-demo-tela" data-email="operador@quadrante.com" data-senha="operador123">
+          <span class="badge-papel badge-papel-operador">Operador</span>
+          <strong>Operador</strong>
+          <span>Ausências, fila e despachos</span>
+        </button>
+        <button type="button" class="btn-card-perfil btn-demo-tela" data-email="marcos@exemplo.com" data-senha="fiscal123">
+          <span class="badge-papel badge-papel-fiscal">Fiscal</span>
+          <strong>Fiscal de Campo</strong>
+          <span>Visualização da rota pessoal</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="divisor-ou"><span>ou credenciais manuais</span></div>
+
+    <form id="form-tela-login" class="form form-login" novalidate>
+      <div class="campo">
+        <label for="tela-login-email">E-mail</label>
+        <input type="email" id="tela-login-email" required autocomplete="username" placeholder="seu.email@quadrante.com">
+      </div>
+      <div class="campo">
+        <label for="tela-login-senha">Senha</label>
+        <input type="password" id="tela-login-senha" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <p class="alerta-erro" id="tela-login-erro" role="alert" hidden></p>
+      <button type="submit" class="btn btn-primario btn-bloco" id="btn-entrar-tela">
+        <span class="icone" data-icone="check" aria-hidden="true"></span>
+        Entrar no Quadrante
+      </button>
+    </form>
+
+    <div class="login-rodape">
+      <span>Maceió-AL · 117 Condomínios · 6 Fiscais de Campo</span>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app" hidden>
   <header class="topo">
     <div class="marca">
       <svg class="marca-logo" viewBox="0 0 32 32" aria-hidden="true">
@@ -32,6 +90,10 @@
       </div>
     </div>
     <div class="topo-acoes">
+      <button type="button" class="btn btn-pequeno btn-destaque-estruturas" id="btn-abrir-estruturas" aria-haspopup="dialog" title="Visualizar classes e nós em tempo real">
+        <span class="icone" data-icone="dados" aria-hidden="true"></span>
+        <span class="rotulo-btn">Raio-X Estruturas</span>
+      </button>
       <p class="chip-status" id="status-api" data-estado="aguardando" role="status">
         <span class="ponto" aria-hidden="true"></span>
         <span id="status-api-texto">conectando…</span>
@@ -42,8 +104,9 @@
           <span id="usuario-nome">Entrar</span>
           <span class="badge-papel" id="usuario-badge" hidden></span>
         </button>
-        <button type="button" class="btn btn-pequeno btn-icone" id="btn-logout" aria-label="Sair da sessão" title="Sair da sessão" hidden>
+        <button type="button" class="btn btn-pequeno" id="btn-logout" title="Sair da sessão" hidden>
           <span class="icone" data-icone="sair" aria-hidden="true"></span>
+          <span>Sair</span>
         </button>
       </div>
       <button type="button" class="btn" id="btn-reset" aria-label="Reiniciar demonstração" title="Recarrega o estado inicial: fiscais, condomínios, sem ausências nem realocações">
@@ -89,7 +152,7 @@
       <button type="button" class="tab" role="tab" id="tab-historico" aria-controls="painel-historico" aria-selected="false" tabindex="-1">
         Histórico <span class="contador" id="contador-historico" hidden></span>
       </button>
-      <button type="button" class="tab" role="tab" id="tab-kmeans" aria-controls="painel-kmeans" aria-selected="false" tabindex="-1">K-means</button>
+      <button type="button" class="tab" role="tab" id="tab-kmeans" aria-controls="painel-kmeans" aria-selected="false" tabindex="-1">Redistribuição</button>
       <button type="button" class="tab" role="tab" id="tab-cadastro" aria-controls="painel-cadastro" aria-selected="false" tabindex="-1" aria-label="Novo condomínio">
         <span class="icone" data-icone="mais" aria-hidden="true"></span>
         Novo
@@ -268,6 +331,97 @@
         <button type="submit" class="btn btn-primario" id="btn-entrar-login">Entrar</button>
       </div>
     </form>
+  </div>
+</dialog>
+
+<dialog id="modal-estruturas" class="dialogo dialogo-largo" aria-labelledby="estruturas-titulo">
+  <div class="dialogo-conteudo modal-estruturas-conteudo">
+    <div class="dialogo-cabecalho">
+      <div>
+        <h2 id="estruturas-titulo" class="dialogo-titulo">Raio-X das Estruturas de Dados</h2>
+        <p class="dialogo-descricao">Inspeção em tempo real das 4 classes Python implementadas na memória</p>
+      </div>
+      <button type="button" class="btn-fechar" id="btn-fechar-estruturas" aria-label="Fechar modal">
+        <span class="icone" data-icone="fechar" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div class="estruturas-acoes-topo">
+      <button type="button" class="btn btn-primario btn-pequeno" id="btn-modo-demo" title="Executa um fluxo didático automatizado em 15 segundos">
+        <span class="icone" data-icone="play" aria-hidden="true"></span>
+        <span>Executar Simulação Didática (Modo Demo)</span>
+      </button>
+      <button type="button" class="btn btn-pequeno" id="btn-atualizar-estruturas" title="Recarrega os dados da memória">
+        <span class="icone" data-icone="reiniciar" aria-hidden="true"></span>
+        <span>Atualizar Memória</span>
+      </button>
+    </div>
+
+    <div class="grid-estruturas" id="grid-estruturas">
+      <div class="card-estrutura" id="card-vetor">
+        <div class="card-estrutura-cabecalho">
+          <div>
+            <span class="badge-complexidade">O(1) Acesso Indexado</span>
+            <h3>1. Vetor Dinâmico</h3>
+          </div>
+          <span class="tipo-classe">class Vetor</span>
+        </div>
+        <p class="estrutura-descricao">Armazenamento contíguo dos Fiscais. Redimensionamento dinâmico amortizado O(1).</p>
+        <div class="metricas-estrutura">
+          <span>Tamanho: <strong id="vetor-tamanho">-</strong></span>
+          <span>Capacidade: <strong id="vetor-capacidade">-</strong></span>
+        </div>
+        <div class="visualizacao-vetor" id="visualizacao-vetor"></div>
+      </div>
+
+      <div class="card-estrutura" id="card-lista">
+        <div class="card-estrutura-cabecalho">
+          <div>
+            <span class="badge-complexidade">O(1) Encadeamento de Nós</span>
+            <h3>2. Lista Encadeada</h3>
+          </div>
+          <span class="tipo-classe">class ListaEncadeada</span>
+        </div>
+        <p class="estrutura-descricao">Carteira de condomínios do fiscal. Inserção/remoção em remanejamento sem deslocamento de memória.</p>
+        <div class="metricas-estrutura">
+          <span>Fiscal: <strong id="lista-fiscal-nome">-</strong></span>
+          <span>Condomínios na Carteira: <strong id="lista-tamanho">-</strong></span>
+        </div>
+        <div class="visualizacao-lista" id="visualizacao-lista"></div>
+      </div>
+
+      <div class="card-estrutura" id="card-fila">
+        <div class="card-estrutura-cabecalho">
+          <div>
+            <span class="badge-complexidade">FIFO · O(1) Início / Fim</span>
+            <h3>3. Fila de Ausências</h3>
+          </div>
+          <span class="tipo-classe">class Fila</span>
+        </div>
+        <p class="estrutura-descricao">Solicitações de ausência aguardando atendimento por ordem cronológica de chegada.</p>
+        <div class="metricas-estrutura">
+          <span>Na Fila: <strong id="fila-tamanho">-</strong></span>
+          <span>Próximo a Sair: <strong id="fila-proximo">-</strong></span>
+        </div>
+        <div class="visualizacao-fila" id="visualizacao-fila"></div>
+      </div>
+
+      <div class="card-estrutura" id="card-pilha">
+        <div class="card-estrutura-cabecalho">
+          <div>
+            <span class="badge-complexidade">LIFO · O(1) Topo</span>
+            <h3>4. Pilha de Histórico</h3>
+          </div>
+          <span class="tipo-classe">class Pilha</span>
+        </div>
+        <p class="estrutura-descricao">Histórico de realocações. A operação Desfazer sempre reverte o item do topo primeiro.</p>
+        <div class="metricas-estrutura">
+          <span>Itens Empilhados: <strong id="pilha-tamanho">-</strong></span>
+          <span>Topo Atual: <strong id="pilha-topo">-</strong></span>
+        </div>
+        <div class="visualizacao-pilha" id="visualizacao-pilha"></div>
+      </div>
+    </div>
   </div>
 </dialog>
 

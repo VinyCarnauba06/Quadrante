@@ -17,6 +17,10 @@ class Vetor:
     def __len__(self) -> int:
         return self._tamanho
 
+    @property
+    def capacidade(self) -> int:
+        return self._capacidade
+
     def esta_vazio(self) -> bool:
         return self._tamanho == 0
 

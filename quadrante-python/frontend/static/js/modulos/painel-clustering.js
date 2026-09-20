@@ -4,7 +4,7 @@ import { corDoFiscal } from "./cores.js";
 import { confirmar } from "./dialogo.js";
 import { comCarregando, el } from "./dom.js";
 import { assinar, estado, fiscalPorId, fiscalPorNome } from "./estado.js";
-import { milissegundos, nomeProprio, plural } from "./formatacao.js";
+import { nomeProprio, plural } from "./formatacao.js";
 import { icone } from "./icones.js";
 import { focarCondominio } from "./mapa.js";
 import { notificar } from "./notificacoes.js";
@@ -140,7 +140,6 @@ function renderizar() {
         { class: "estatisticas" },
         estatistica(sugestao.total_condominios, "avaliados"),
         estatistica(sugestao.total_mudancas, "trocas sugeridas"),
-        estatistica(milissegundos(sugestao.ms), "cálculo + rede"),
       ),
     ),
     el("div", { class: "acoes-empilhadas" }, botaoAplicar),

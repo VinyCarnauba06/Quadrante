@@ -10,7 +10,7 @@ from datetime import datetime
 
 from typing import Optional
 
-from flask import Flask, jsonify, request, render_template, session
+from flask import Flask, jsonify, request, render_template, session, Response
 
 from backend.config import carregar_configuracao
 from backend.domain.clustering import AtribuicaoSugerida
@@ -40,6 +40,8 @@ app = Flask(
     static_folder=os.path.join(BASE_DIR, "frontend", "static"),
 )
 app.secret_key = os.environ.get("QUADRANTE_SECRET_KEY", "quadrante-segredo-sessao-2026")
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
 _lock = threading.Lock()
 _estado = {}
@@ -164,6 +166,22 @@ def auth_logout():
 @app.get("/")
 def index():
     return render_template("index.html", geoapify_chave=config.geoapify_chave)
+
+
+@app.get("/login")
+def login_view():
+    session.clear()
+    return render_template("index.html", geoapify_chave=config.geoapify_chave)
+
+
+@app.get("/favicon.ico")
+def favicon() -> Response:
+    return Response(status=204)
+
+
+@app.get("/.well-known/<path:subpath>")
+def well_known(subpath: str) -> Response:
+    return Response(status=204)
 
 
 @app.get("/api/geocodificar")
@@ -503,6 +521,126 @@ def historico():
             "distancia_m": round(r.distancia_metros, 1),
         })
     return jsonify(itens)
+
+
+@app.get("/api/estruturas/raio-x")
+def estruturas_raio_x():
+    store = _estado["store"]
+    fid = request.args.get("fiscal_id")
+
+    fiscais_dados: list[dict] = []
+    for f in store.fiscais:
+        fiscais_dados.append({
+            "id": f.id,
+            "nome": f.nome,
+            "papel": f.papel,
+            "ativo": f.ativo,
+        })
+    vetor_info = {
+        "classe": "Vetor",
+        "tamanho": len(store.fiscais),
+        "capacidade": store.fiscais.capacidade,
+        "complexidade": "O(1) amortizado inserção, O(1) acesso indexado",
+        "elementos": fiscais_dados,
+    }
+
+    if not fid:
+        for f in store.fiscais:
+            if f.papel == PAPEL_FISCAL_CAMPO and f.ativo:
+                fid = f.id
+                break
+
+    carteira = store._carteira_de(fid) if fid else None
+    nos_encadeados: list[dict] = []
+    if carteira:
+        for cond in carteira:
+            nos_encadeados.append({
+                "id": cond.id,
+                "nome": cond.nome,
+                "endereco": cond.endereco_formatado,
+            })
+
+    fiscal_alvo = None
+    if fid:
+        try:
+            f_encontrado = store.buscar_fiscal(fid)
+            fiscal_alvo = {"id": f_encontrado.id, "nome": f_encontrado.nome}
+        except Exception:
+            fiscal_alvo = {"id": fid, "nome": fid}
+
+    lista_info = {
+        "classe": "ListaEncadeada",
+        "fiscal": fiscal_alvo,
+        "tamanho": len(carteira) if carteira else 0,
+        "complexidade": "O(1) inserção/remoção por ponteiros sem deslocar memória",
+        "elementos": nos_encadeados,
+    }
+
+    fila_solicitacoes = store.fila_solicitacoes_ausencia.para_lista()
+    solicitacoes_dados: list[dict] = []
+    for s in fila_solicitacoes:
+        f_nome = s.fiscal_id
+        try:
+            f_obj = store.buscar_fiscal(s.fiscal_id)
+            f_nome = f_obj.nome
+        except Exception:
+            pass
+        solicitacoes_dados.append({
+            "fiscal_id": s.fiscal_id,
+            "fiscal_nome": f_nome,
+            "motivo": s.motivo,
+            "data_inicio": s.data_inicio.isoformat() if s.data_inicio else "",
+            "data_fim": s.data_fim.isoformat() if s.data_fim else "",
+        })
+    fila_info = {
+        "classe": "Fila",
+        "disciplina": "FIFO (First In, First Out)",
+        "tamanho": len(store.fila_solicitacoes_ausencia),
+        "complexidade": "O(1) enfileirar/desenfileirar com ponteiros inicio/fim",
+        "cabeca": solicitacoes_dados[0] if solicitacoes_dados else None,
+        "elementos": solicitacoes_dados,
+    }
+
+    pilha_ids = store.historico_realocacoes.para_lista()
+    realocacoes_dados: list[dict] = []
+    for rid in pilha_ids:
+        r = store.buscar_realocacao(rid)
+        if r is None:
+            continue
+        cond = store.buscar_condominio(r.condominio_id)
+        f_origem_nome = r.fiscal_origem_id
+        f_destino_nome = r.fiscal_destino_id
+        try:
+            f_origem_nome = store.buscar_fiscal(r.fiscal_origem_id).nome
+        except Exception:
+            pass
+        try:
+            f_destino_nome = store.buscar_fiscal(r.fiscal_destino_id).nome
+        except Exception:
+            pass
+        realocacoes_dados.append({
+            "id": r.id,
+            "condominio_id": r.condominio_id,
+            "condominio_nome": cond.nome if cond else r.condominio_id,
+            "de": f_origem_nome,
+            "para": f_destino_nome,
+            "ativa": r.ativa,
+        })
+    pilha_info = {
+        "classe": "Pilha",
+        "disciplina": "LIFO (Last In, First Out)",
+        "tamanho": len(store.historico_realocacoes),
+        "complexidade": "O(1) empilhar/desempilhar com ponteiro topo",
+        "topo": realocacoes_dados[0] if realocacoes_dados else None,
+        "elementos": realocacoes_dados,
+    }
+
+    return jsonify({
+        "vetor": vetor_info,
+        "lista_encadeada": lista_info,
+        "fila": fila_info,
+        "pilha": pilha_info,
+    })
 
 
 @app.post("/api/reset")

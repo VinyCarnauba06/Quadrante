@@ -2,7 +2,7 @@ import { estadoVazio, marcaDeFiscal } from "./componentes.js";
 import { corDoFiscal } from "./cores.js";
 import { el, esqueletos } from "./dom.js";
 import { assinar, estado, fiscalPorId } from "./estado.js";
-import { enderecoCurto, milissegundos, nomeProprio, plural, quilometros } from "./formatacao.js";
+import { enderecoCurto, nomeProprio, plural, quilometros } from "./formatacao.js";
 import { focarParada, realcarParada } from "./mapa.js";
 
 const conteudo = () => document.getElementById("rota-conteudo");
@@ -72,7 +72,7 @@ function renderizar() {
 
   if (estado.carregandoRota || !estado.rota) {
     alvo.replaceChildren(
-      el("div", { class: "estatisticas" }, ...esqueletos(3, "fiscal-esqueleto")),
+      el("div", { class: "estatisticas" }, ...esqueletos(2, "fiscal-esqueleto")),
       el("div", { class: "paradas" }, ...esqueletos(5, "fiscal-esqueleto")),
     );
     return;
@@ -88,7 +88,6 @@ function renderizar() {
       { class: "estatisticas" },
       estatistica(quilometros(estado.rota.distancia_total_km), "percurso total", "km"),
       estatistica(paradas.length, "paradas", ""),
-      estatistica(estado.rota.doCache ? "cache" : milissegundos(estado.rota.ms), estado.rota.doCache ? "resposta instantânea" : "cálculo + rede", ""),
     ),
     el("h3", { class: "subtitulo" }, "Ordem das visitas"),
     el("ol", { class: "paradas", "aria-label": "Paradas da rota, na ordem otimizada" }, paradas.map((p) => linhaDaParada(p, cor))),

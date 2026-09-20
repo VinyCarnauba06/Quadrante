@@ -112,13 +112,26 @@ function criarBases(chaveGeoapify) {
         attribution: 'Powered by <a href="https://www.geoapify.com/">Geoapify</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }),
     });
+    bases.push({
+      nome: "Modo escuro (Geoapify)",
+      camada: L.tileLayer(`https://maps.geoapify.com/v1/tile/dark-matter/{z}/{x}/{y}{r}.png?apiKey=${encodeURIComponent(chaveGeoapify)}`, {
+        maxZoom: 19,
+        attribution: 'Powered by <a href="https://www.geoapify.com/">Geoapify</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }),
+    });
+    bases.push({
+      nome: "Minimalista (Geoapify)",
+      camada: L.tileLayer(`https://maps.geoapify.com/v1/tile/positron/{z}/{x}/{y}{r}.png?apiKey=${encodeURIComponent(chaveGeoapify)}`, {
+        maxZoom: 19,
+        attribution: 'Powered by <a href="https://www.geoapify.com/">Geoapify</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }),
+    });
   }
   bases.push({
-    nome: "Ruas (claro)",
-    camada: L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      subdomains: "abcd",
-      maxZoom: 20,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    nome: "Satélite (Esri)",
+    camada: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 19,
+      attribution: '&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
     }),
   });
   bases.push({
@@ -134,8 +147,10 @@ function criarBases(chaveGeoapify) {
 function vigiarBases(bases, aoMudarBase) {
   let falhas = 0;
   let esgotado = false;
+  let manual = false;
   mapa.on("baselayerchange", () => {
     falhas = 0;
+    manual = true;
   });
   bases.forEach((base, indice) => {
     base.camada.on("tileerror", () => {
@@ -143,6 +158,7 @@ function vigiarBases(bases, aoMudarBase) {
       falhas += 1;
       if (falhas < FALHAS_PARA_TROCAR) return;
       falhas = 0;
+      if (manual) return;
       const proxima = bases[indice + 1];
       if (!proxima) {
         esgotado = true;
@@ -264,8 +280,6 @@ export function desenharRota({ paradas, cor, geral }) {
   });
 
   const caminho = paradas.map((p) => [p.latitude, p.longitude]);
-  L.polyline(caminho, { color: "#ffffff", weight: 9, opacity: 0.95, lineCap: "round", lineJoin: "round", interactive: false }).addTo(camadaRota);
-  L.polyline(caminho, { color: cor, weight: 4, opacity: 1, lineCap: "round", lineJoin: "round", interactive: false }).addTo(camadaRota);
 
   paradas.forEach((parada, indice) => {
     const inicio = indice === 0;

@@ -908,6 +908,22 @@ tbody tr:hover {
 }
 
 @media (max-width: 480px) {
+  .topo {
+    padding: 0 var(--espaco-2);
+  }
+
+  .topo-acoes {
+    gap: var(--espaco-2);
+  }
+
+  .marca h1 {
+    font-size: var(--texto-titulo-2);
+  }
+
+  #btn-logout span:not(.icone) {
+    display: none;
+  }
+
   .campos-linha,
   .acoes-grupo {
     grid-template-columns: 1fr;

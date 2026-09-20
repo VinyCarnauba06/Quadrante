@@ -43,6 +43,11 @@ export async function processarProxima() {
   await atualizarAposMudanca();
 
   const nome = nomeDoFiscal(resposta.fiscal_id);
+  console.log(
+    `%cFILA (FIFO)%c Processada ausência de ${nome}: ${resposta.qtd_realocacoes} condomínio(s) redistribuído(s)`,
+    "background: #b45309; color: #ffffff; font-weight: 700; padding: 2px 6px; border-radius: 4px;",
+    ""
+  );
   if (resposta.qtd_realocacoes === 0) {
     notificar.info(`Ausência de ${nome} registrada`, "Nenhum condomínio precisou ser redistribuído.");
     return;
@@ -58,6 +63,11 @@ export async function desfazerUltima() {
   const resposta = await api.post("/api/realocacoes/desfazer");
   await atualizarAposMudanca();
   const condominio = topo ? nomeProprio(topo.condominio_nome) : "Condomínio";
+  console.log(
+    `%cPILHA (LIFO)%c Desfeita última realocação: ${condominio} voltou para ${nomeDoFiscal(resposta.voltou_para)}`,
+    "background: #be185d; color: #ffffff; font-weight: 700; padding: 2px 6px; border-radius: 4px;",
+    ""
+  );
   notificar.ok("Realocação desfeita", `${condominio} voltou para ${nomeDoFiscal(resposta.voltou_para)}.`);
 }
 
@@ -76,6 +86,13 @@ export async function reverterExpiradas() {
 
 export async function calcularSugestao() {
   const { dados, ms } = await api.medido("/api/clustering/sugestao");
+  console.log(
+    `%cCLUSTERING (K-MEANS)%c ${dados.total_condominios} condomínios avaliados, ${dados.total_mudancas} trocas sugeridas ⏱ %c${ms.toFixed(1)} ms%c`,
+    "background: #0e7490; color: #ffffff; font-weight: 700; padding: 2px 6px; border-radius: 4px;",
+    "",
+    "color: #10b981; font-weight: 700;",
+    ""
+  );
   estado.sugestao = { ...dados, ms };
   estado.aplicacaoClustering = null;
   emitir("sugestao");

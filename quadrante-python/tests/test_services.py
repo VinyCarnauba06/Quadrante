@@ -185,3 +185,26 @@ def test_clustering_balanceamento_de_carga_distribui_equitativamente():
     for fid, total in contagens.items():
         assert limite_min <= total <= limite_max
 
+
+def test_performance_roteirizacao_e_redistribuicao_abaixo_do_limite():
+    import time
+    from datetime import datetime, timezone
+    store = Store()
+    carregar(CAMINHO_SEED, store)
+    routing = RoutingService(store)
+    clustering = ClusteringService(store)
+
+    fiscais = store.fiscais_de_campo()
+    for f in fiscais:
+        t0: float = time.perf_counter()
+        rota = routing.gerar_rota_do_dia(f.id, datetime.now(timezone.utc))
+        delta_ms: float = (time.perf_counter() - t0) * 1000.0
+        assert delta_ms < 50.0
+        assert len(rota.paradas) > 0
+
+    t0_cluster: float = time.perf_counter()
+    sugestao = clustering.sugerir_redistribuicao()
+    delta_cluster_ms: float = (time.perf_counter() - t0_cluster) * 1000.0
+    assert delta_cluster_ms < 100.0
+    assert sugestao.total_condominios == 117
+

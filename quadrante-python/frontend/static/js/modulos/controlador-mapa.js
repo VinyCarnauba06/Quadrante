@@ -1,6 +1,6 @@
 import { corDoFiscal } from "./cores.js";
 import { assinar, estado, fiscaisDeCampo, fiscalPorId } from "./estado.js";
-import { milissegundos, nomeProprio, plural, quilometros } from "./formatacao.js";
+import { nomeProprio, plural, quilometros } from "./formatacao.js";
 import { desenharGeral, desenharRota, destacarFiscal, iniciarMapa } from "./mapa.js";
 import { selecionar } from "./servicos.js";
 
@@ -21,10 +21,9 @@ function renderizar() {
     const paradas = estado.rota.paradas.filter((p) => p.latitude != null && p.longitude != null);
     const cor = corDoFiscal(fiscal);
     desenharRota({ paradas, cor, geral: estado.mapaGeral });
-    const origem = estado.rota.doCache ? "instantâneo, em cache" : milissegundos(estado.rota.ms);
     definirCartao(
       `Rota de ${nomeProprio(fiscal.nome)}`,
-      `${quilometros(estado.rota.distancia_total_km)} km · ${plural(paradas.length, "parada", "paradas")} · ${origem}`,
+      `${quilometros(estado.rota.distancia_total_km)} km · ${plural(paradas.length, "parada", "paradas")}`,
       estado.usuario?.papel !== "fiscal_campo",
     );
     return;

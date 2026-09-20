@@ -43,6 +43,13 @@ export async function selecionar(id) {
   const emCache = rotaEmCache(id);
   if (emCache) {
     estado.rota = { ...emCache, ms: 0, doCache: true };
+    console.log(
+      `%cROTA (CACHE)%c ${fiscal.nome}: recuperada da memória local ⏱ %c0.0 ms%c`,
+      "background: #334155; color: #94a3b8; font-weight: 700; padding: 2px 6px; border-radius: 4px;",
+      "",
+      "color: #10b981; font-weight: 700;",
+      ""
+    );
     estado.carregandoRota = false;
     emitir("selecao");
     emitir("rota");
@@ -59,6 +66,13 @@ export async function selecionar(id) {
     if (ordem !== estado.ordemRota) return;
     guardarRota(id, dados);
     estado.rota = { ...dados, ms, doCache: false };
+    console.log(
+      `%cROTA (TSP)%c ${fiscal.nome}: ${dados.distancia_total_km.toFixed(1)} km, ${dados.paradas.length} paradas ⏱ %c${ms.toFixed(1)} ms%c`,
+      "background: #4338ca; color: #ffffff; font-weight: 700; padding: 2px 6px; border-radius: 4px;",
+      "",
+      "color: #10b981; font-weight: 700;",
+      ""
+    );
   } catch (erro) {
     if (ordem !== estado.ordemRota) return;
     estado.selecionadoId = null;
